@@ -1,4 +1,4 @@
-package plus.jdk.websocket;
+package plus.jdk.websocket.global;
 
 import io.netty.bootstrap.ServerBootstrap;
 import io.netty.channel.Channel;
@@ -24,9 +24,9 @@ import io.netty.util.AttributeKey;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.TypeMismatchException;
-import plus.jdk.websocket.global.HttpServerHandler;
-import plus.jdk.websocket.model.WebsocketMethodMapping;
-import plus.jdk.websocket.model.WsSession;
+import org.springframework.beans.factory.BeanFactory;
+import plus.jdk.websocket.common.WebsocketCommonException;
+import plus.jdk.websocket.model.IWsSession;
 import plus.jdk.websocket.properties.WebsocketProperties;
 
 import java.lang.reflect.Method;
@@ -41,7 +41,7 @@ public class WebsocketDispatcher {
 
     private static final AttributeKey<Object> POJO_KEY = AttributeKey.valueOf("WEBSOCKET_IMPLEMENT");
 
-    public static final AttributeKey<WsSession> SESSION_KEY = AttributeKey.valueOf("WEBSOCKET_SESSION");
+    public static final AttributeKey<IWsSession> SESSION_KEY = AttributeKey.valueOf("WEBSOCKET_SESSION");
 
     private static final AttributeKey<String> PATH_KEY = AttributeKey.valueOf("WEBSOCKET_PATH");
 
@@ -49,12 +49,14 @@ public class WebsocketDispatcher {
 
     public static final AttributeKey<Map<String, List<String>>> REQUEST_PARAM = AttributeKey.valueOf("WEBSOCKET_REQUEST_PARAM");
 
+    private final BeanFactory beanFactory;
 
     @Getter
     private final ConcurrentHashMap<String, WebsocketMethodMapping> websocketMethodMap = new ConcurrentHashMap<>();
 
-    public WebsocketDispatcher(WebsocketProperties properties) {
+    public WebsocketDispatcher(WebsocketProperties properties, BeanFactory beanFactory) {
         this.properties = properties;
+        this.beanFactory = beanFactory;
     }
 
     public void registerEndpoint(String path, WebsocketMethodMapping desc) {
@@ -146,15 +148,16 @@ public class WebsocketDispatcher {
     /**
      * 执行握手
      */
-    public void doBeforeHandshake(Channel channel, FullHttpRequest req, String path) {
+    public void doBeforeHandshake(Channel channel, FullHttpRequest req, String path) throws WebsocketCommonException {
         WebsocketMethodMapping methodMapping = websocketMethodMap.get(path);
         if(methodMapping == null) {
             return;
         }
         Object implement = methodMapping.getBeanObject();
         channel.attr(POJO_KEY).set(implement);
-        WsSession session = new WsSession(channel);
-        channel.attr(SESSION_KEY).set(session);
+        IWSSessionAuthenticator authenticator = beanFactory.getBean(properties.getSessionAuthenticator());
+        IWsSession wsSession = authenticator.authenticate(channel, req, path);
+        channel.attr(SESSION_KEY).set(wsSession);
         channel.attr(PATH_KEY).set(path);
         Method beforeHandshake = methodMapping.getBeforeHandshake();
         if (beforeHandshake != null) {
@@ -168,7 +171,7 @@ public class WebsocketDispatcher {
         }
     }
 
-    public void doOnOpen(Channel channel, FullHttpRequest req, String path) {
+    public void doOnOpen(Channel channel, FullHttpRequest req, String path) throws WebsocketCommonException {
         WebsocketMethodMapping methodMapping = websocketMethodMap.get(path);
         if(methodMapping == null) {
             return;
@@ -176,8 +179,9 @@ public class WebsocketDispatcher {
         Object implement = channel.attr(POJO_KEY).get();
         if (implement==null){
             implement = methodMapping.getBeanObject();
-            WsSession session = new WsSession(channel);
-            channel.attr(SESSION_KEY).set(session);
+            IWSSessionAuthenticator authenticator = beanFactory.getBean(properties.getSessionAuthenticator());
+            IWsSession wsSession = authenticator.authenticate(channel, req, path);
+            channel.attr(SESSION_KEY).set(wsSession);
         }
 
         Method onOpenMethod = methodMapping.getOnOpenMethod();

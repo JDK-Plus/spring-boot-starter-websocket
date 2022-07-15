@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import java.util.List;
 import java.util.Map;
 
-import static plus.jdk.websocket.WebsocketDispatcher.REQUEST_PARAM;
+import static plus.jdk.websocket.global.WebsocketDispatcher.REQUEST_PARAM;
 
 public class RequestParamMethodArgumentResolver implements MethodArgumentResolver {
 

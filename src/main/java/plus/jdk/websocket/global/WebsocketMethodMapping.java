@@ -1,4 +1,4 @@
-package plus.jdk.websocket.model;
+package plus.jdk.websocket.global;
 
 import io.netty.channel.Channel;
 import io.netty.handler.codec.http.FullHttpRequest;

@@ -8,6 +8,7 @@ import plus.jdk.websocket.annotations.OnWsMessage;
 import java.lang.reflect.Method;
 
 public class TextMethodArgumentResolver implements MethodArgumentResolver {
+
     @Override
     public boolean supportsParameter(MethodParameter parameter) {
         Method method = parameter.getMethod();

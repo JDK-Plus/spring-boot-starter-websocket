@@ -1,9 +1,10 @@
 package plus.jdk.websocket.properties;
 
-import io.netty.channel.ChannelInboundHandlerAdapter;
 import io.netty.handler.logging.LogLevel;
 import lombok.Data;
 import org.springframework.boot.context.properties.ConfigurationProperties;
+import plus.jdk.websocket.global.DefaultSessionAuthenticator;
+import plus.jdk.websocket.global.IWSSessionAuthenticator;
 
 @Data
 @ConfigurationProperties(prefix = "plus.jdk.websocket")
@@ -85,5 +86,5 @@ public class WebsocketProperties {
     /**
      * 认证器
      */
-    private Class<? extends ChannelInboundHandlerAdapter> authHandleAdapter = null;
+    private Class<? extends IWSSessionAuthenticator> sessionAuthenticator = DefaultSessionAuthenticator.class;
 }

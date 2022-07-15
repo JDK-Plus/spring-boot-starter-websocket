@@ -10,14 +10,10 @@ import org.springframework.beans.factory.support.AbstractBeanFactory;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ResourceLoaderAware;
 import org.springframework.context.support.ApplicationObjectSupport;
-import org.springframework.core.env.Environment;
 import org.springframework.core.io.ResourceLoader;
-import plus.jdk.websocket.WebsocketDispatcher;
 import plus.jdk.websocket.annotations.*;
 import plus.jdk.websocket.common.ReflectUtils;
-import plus.jdk.websocket.model.WebsocketMethodMapping;
 
-import javax.annotation.Resource;
 import java.lang.reflect.Modifier;
 
 @Slf4j
@@ -64,6 +60,7 @@ public class ServerEndpointExporter extends ApplicationObjectSupport implements 
                 websocketMethodMapping.setOnBinaryMethod(ReflectUtils.getFirstAnnotatedMethod(beanObject, OnWsBinary.class, method -> Modifier.isPublic(method.getModifiers())));
                 websocketMethodMapping.setOnEventMethod(ReflectUtils.getFirstAnnotatedMethod(beanObject, OnWsEvent.class, method -> Modifier.isPublic(method.getModifiers())));
                 websocketMethodMapping.buildParameters();
+                log.info("source websocket handler {} success", path);
                 websocketDispatcher.registerEndpoint(path, websocketMethodMapping);
             }
         }

@@ -5,7 +5,6 @@ import io.netty.buffer.Unpooled;
 import io.netty.channel.*;
 import io.netty.channel.nio.NioEventLoopGroup;
 import io.netty.handler.codec.http.*;
-import io.netty.handler.codec.http.cors.CorsHandler;
 import io.netty.handler.codec.http.websocketx.CloseWebSocketFrame;
 import io.netty.handler.codec.http.websocketx.WebSocketFrameAggregator;
 import io.netty.handler.codec.http.websocketx.WebSocketServerHandshaker;
@@ -16,8 +15,7 @@ import io.netty.util.AttributeKey;
 import io.netty.util.CharsetUtil;
 import org.springframework.beans.TypeMismatchException;
 import org.springframework.util.StringUtils;
-import plus.jdk.websocket.WebsocketDispatcher;
-import plus.jdk.websocket.model.WebsocketMethodMapping;
+import plus.jdk.websocket.common.WebsocketCommonException;
 import plus.jdk.websocket.properties.WebsocketProperties;
 
 import static io.netty.handler.codec.http.HttpHeaderNames.*;
@@ -66,7 +64,7 @@ public class HttpServerHandler extends SimpleChannelInboundHandler<FullHttpReque
         super.channelInactive(ctx);
     }
 
-    private void handleHttpRequest(ChannelHandlerContext ctx, FullHttpRequest req) {
+    private void handleHttpRequest(ChannelHandlerContext ctx, FullHttpRequest req) throws WebsocketCommonException {
         FullHttpResponse res;
         // Handle a bad request.
         if (!req.decoderResult().isSuccess()) {
@@ -149,9 +147,6 @@ public class HttpServerHandler extends SimpleChannelInboundHandler<FullHttpReque
             }
             handshaker.handshake(channel, req).addListener(future -> {
                 if (future.isSuccess()) {
-                    if (properties.getCorsAllowCredentials()) {
-                        pipeline.remove(CorsHandler.class);
-                    }
                     websocketDispatcher.doOnOpen(channel, req, path);
                 } else {
                     handshaker.close(channel, new CloseWebSocketFrame());
