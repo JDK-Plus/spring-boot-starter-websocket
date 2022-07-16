@@ -1,4 +1,5 @@
-<h3 align="center">A springboot websocket component written using netty。</h3>
+
+<h3 align="center">这是一款使用netty编写的springboot websocket组件。</h3>
 <p align="center">
     <a href="https://github.com/JDK-Plus/cli-plus/blob/master/LICENSE"><img src="https://img.shields.io/github/license/JDK-Plus/cli-plus.svg" /></a>
     <a href="https://github.com/JDK-Plus/cli-plus/releases"><img src="https://img.shields.io/github/release/JDK-Plus/cli-plus.svg" /></a>
@@ -6,9 +7,11 @@
     <a href="https://github.com/JDK-Plus/cli-plus/network/members"><img src="https://img.shields.io/github/forks/JDK-Plus/cli-plus.svg" /></a>
 </p>
 
-- [中文文档](README.md)
 
-## Maven Dependencies
+- [English](README-CN.md)
+
+
+## 如何引入
 
 ```xml
 <dependency>
@@ -17,25 +20,26 @@
     <version>1.0.1</version>
 </dependency>
 ```
-
-## Configuration
+## 配置
 
 ```
 plus.jdk.websocket.enabled=true
 plus.jdk.websocket.port=10001
 plus.jdk.websocket.cors-allow-credentials=true
+plus.jdk.websocket.session-authenticator=plus.jdk.broadcast.test.session.WSSessionAuthenticator
 ```
 
-## Example of use
 
-### Implement session authentication related logic according to your own business
+## 使用示例
 
-#### Define the implementation of the business on the session
 
-It is enough to implement the `IWsSession` interface for session authentication.
+### 根据自己的业务实现session认证相关逻辑
 
-This interface encapsulates a `userId`, the parameter user can customize its type. There is also a channel, 
-and subsequent user interactions with the object depend on this object
+#### 定义业务关于session的实现
+
+业务上session的定义必须实现`IWsSession` 接口。
+
+该接口封装了一个`userId`,该参数用户可以自定义其类型。还有一个channel，后续用户与该对象的交互都依赖于这个对象
 
 ```java
 package plus.jdk.broadcast.test.session;
@@ -55,10 +59,9 @@ public class MyWsSession implements IWsSession<String> {
 }
 ```
 
-#### Custom `Session` validator
+#### 自定义`Session`验证器
 
-The authenticator must implement the `IWSSessionAuthenticator` interface. 
-The usage example is as follows:
+验证器必须实现`IWSSessionAuthenticator`接口，使用示例如下：
 
 ```java
 package plus.jdk.broadcast.test.session;
@@ -93,16 +96,16 @@ public class WSSessionAuthenticator implements IWSSessionAuthenticator<MyWsSessi
 }
 ```
 
-**Specify the validator component via configuration**
+**通过配置指定验证器组件**
 
 ```
 plus.jdk.websocket.session-authenticator=plus.jdk.broadcast.test.session.WSSessionAuthenticator
 ```
 
 
-### Write relevant business logic
+### 编写相关业务逻辑
 
-As above, after implementing Session authentication, you can continue to write the business logic of websocket.
+如上文，当实现Session认证后，即可继续编写websocket的业务逻辑了。
 
 ```java
 package plus.jdk.broadcast.test.websocket;

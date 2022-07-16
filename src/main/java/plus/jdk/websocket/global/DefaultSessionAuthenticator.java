@@ -6,7 +6,7 @@ import plus.jdk.websocket.model.WsSession;
 
 public class DefaultSessionAuthenticator implements IWSSessionAuthenticator<WsSession> {
     @Override
-    public WsSession authenticate(Channel channel, FullHttpRequest req, String path) {
+    public WsSession authenticate(Channel channel, FullHttpRequest req, String path) throws Exception{
         return new WsSession(channel.id().asShortText(), channel);
     }
 }

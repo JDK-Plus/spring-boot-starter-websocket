@@ -6,5 +6,5 @@ import plus.jdk.websocket.model.IWsSession;
 
 public interface IWSSessionAuthenticator<T extends IWsSession<?>> {
 
-    T authenticate(Channel channel, FullHttpRequest req, String path);
+    T authenticate(Channel channel, FullHttpRequest req, String path) throws Exception;
 }
