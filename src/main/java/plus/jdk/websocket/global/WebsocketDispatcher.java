@@ -41,7 +41,7 @@ public class WebsocketDispatcher {
 
     private static final AttributeKey<Object> POJO_KEY = AttributeKey.valueOf("WEBSOCKET_IMPLEMENT");
 
-    public static final AttributeKey<IWsSession> SESSION_KEY = AttributeKey.valueOf("WEBSOCKET_SESSION");
+    public static final AttributeKey<IWsSession<?>> SESSION_KEY = AttributeKey.valueOf("WEBSOCKET_SESSION");
 
     private static final AttributeKey<String> PATH_KEY = AttributeKey.valueOf("WEBSOCKET_PATH");
 
@@ -67,10 +67,10 @@ public class WebsocketDispatcher {
         String[] corsOrigins = properties.getCorsOrigins();
         Boolean corsAllowCredentials = properties.getCorsAllowCredentials();
         CorsConfig corsConfig = createCorsConfig(corsOrigins, corsAllowCredentials);
-        NioEventLoopGroup boss = new NioEventLoopGroup(properties.getBossLoopGroupThreads());
+        NioEventLoopGroup master = new NioEventLoopGroup(properties.getBossLoopGroupThreads());
         NioEventLoopGroup worker = new NioEventLoopGroup(properties.getWorkerLoopGroupThreads());
         ServerBootstrap bootstrap = new ServerBootstrap();
-        bootstrap.group(boss, worker);
+        bootstrap.group(master, worker);
         bootstrap.channel(NioServerSocketChannel.class);
         bootstrap.option(ChannelOption.CONNECT_TIMEOUT_MILLIS, properties.getConnectTimeoutMillis());
         bootstrap.option(ChannelOption.SO_BACKLOG, properties.getSO_BACKLOG());
@@ -108,7 +108,7 @@ public class WebsocketDispatcher {
             }
         });
         Runtime.getRuntime().addShutdownHook(new Thread(() -> {
-            boss.shutdownGracefully().syncUninterruptibly();
+            master.shutdownGracefully().syncUninterruptibly();
             worker.shutdownGracefully().syncUninterruptibly();
         }));
     }
@@ -148,16 +148,14 @@ public class WebsocketDispatcher {
     /**
      * 执行握手
      */
-    public void doBeforeHandshake(Channel channel, FullHttpRequest req, String path) throws WebsocketCommonException {
+    public void doBeforeHandshake(Channel channel, FullHttpRequest req, String path) throws Exception {
         WebsocketMethodMapping methodMapping = websocketMethodMap.get(path);
         if(methodMapping == null) {
             return;
         }
         Object implement = methodMapping.getBeanObject();
         channel.attr(POJO_KEY).set(implement);
-        IWSSessionAuthenticator authenticator = beanFactory.getBean(properties.getSessionAuthenticator());
-        IWsSession wsSession = authenticator.authenticate(channel, req, path);
-        channel.attr(SESSION_KEY).set(wsSession);
+        setSession(channel, req, path);
         channel.attr(PATH_KEY).set(path);
         Method beforeHandshake = methodMapping.getBeforeHandshake();
         if (beforeHandshake != null) {
@@ -171,7 +169,7 @@ public class WebsocketDispatcher {
         }
     }
 
-    public void doOnOpen(Channel channel, FullHttpRequest req, String path) throws WebsocketCommonException {
+    public void doOnOpen(Channel channel, FullHttpRequest req, String path) throws Exception {
         WebsocketMethodMapping methodMapping = websocketMethodMap.get(path);
         if(methodMapping == null) {
             return;
@@ -179,9 +177,7 @@ public class WebsocketDispatcher {
         Object implement = channel.attr(POJO_KEY).get();
         if (implement==null){
             implement = methodMapping.getBeanObject();
-            IWSSessionAuthenticator authenticator = beanFactory.getBean(properties.getSessionAuthenticator());
-            IWsSession wsSession = authenticator.authenticate(channel, req, path);
-            channel.attr(SESSION_KEY).set(wsSession);
+            setSession(channel, req, path);
         }
 
         Method onOpenMethod = methodMapping.getOnOpenMethod();
@@ -194,6 +190,12 @@ public class WebsocketDispatcher {
                 log.error("{}", t.getMessage());
             }
         }
+    }
+
+    private void setSession(Channel channel, FullHttpRequest req, String path) throws Exception {
+        IWSSessionAuthenticator<?> authenticator = beanFactory.getBean(properties.getSessionAuthenticator());
+        IWsSession<?> wsSession = authenticator.authenticate(channel, req, path);
+        channel.attr(SESSION_KEY).set(wsSession);
     }
 
     public void doOnClose(Channel channel) {

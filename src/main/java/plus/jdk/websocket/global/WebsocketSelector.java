@@ -11,11 +11,4 @@ import javax.annotation.Resource;
 @ConditionalOnMissingBean(ServerEndpointExporter.class)
 public class WebsocketSelector {
 
-    @Resource
-    private WebsocketDispatcher websocketDispatcher;
-
-    @Bean
-    public ServerEndpointExporter serverEndpointExporter(WebsocketProperties properties) {
-        return new ServerEndpointExporter(websocketDispatcher);
-    }
 }

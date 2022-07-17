@@ -12,6 +12,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.context.support.WebApplicationObjectSupport;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
+import plus.jdk.websocket.global.ServerEndpointExporter;
 import plus.jdk.websocket.global.WebsocketDispatcher;
 import plus.jdk.websocket.annotations.*;
 import plus.jdk.websocket.properties.WebsocketProperties;
@@ -36,6 +37,11 @@ public class WebsocketAutoConfiguration extends WebApplicationObjectSupport impl
     @Bean
     public WebsocketDispatcher WebsocketDispatcher(WebsocketProperties properties){
         return new WebsocketDispatcher(properties, beanFactory);
+    }
+
+    @Bean
+    public ServerEndpointExporter serverEndpointExporter(WebsocketProperties properties) {
+        return new ServerEndpointExporter(websocketDispatcher);
     }
 
     @Override

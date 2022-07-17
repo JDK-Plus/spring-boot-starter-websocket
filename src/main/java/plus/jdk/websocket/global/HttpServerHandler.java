@@ -64,7 +64,7 @@ public class HttpServerHandler extends SimpleChannelInboundHandler<FullHttpReque
         super.channelInactive(ctx);
     }
 
-    private void handleHttpRequest(ChannelHandlerContext ctx, FullHttpRequest req) throws WebsocketCommonException {
+    private void handleHttpRequest(ChannelHandlerContext ctx, FullHttpRequest req) throws Exception {
         FullHttpResponse res;
         // Handle a bad request.
         if (!req.decoderResult().isSuccess()) {

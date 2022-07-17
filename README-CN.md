@@ -1,10 +1,10 @@
 
 <h3 align="center">这是一款使用netty编写的springboot websocket组件。</h3>
 <p align="center">
-    <a href="https://github.com/JDK-Plus/cli-plus/blob/master/LICENSE"><img src="https://img.shields.io/github/license/JDK-Plus/cli-plus.svg" /></a>
-    <a href="https://github.com/JDK-Plus/cli-plus/releases"><img src="https://img.shields.io/github/release/JDK-Plus/cli-plus.svg" /></a>
-    <a href="https://github.com/JDK-Plus/cli-plus/stargazers"><img src="https://img.shields.io/github/stars/JDK-Plus/cli-plus.svg" /></a>
-    <a href="https://github.com/JDK-Plus/cli-plus/network/members"><img src="https://img.shields.io/github/forks/JDK-Plus/cli-plus.svg" /></a>
+    <a href="https://github.com/JDK-Plus/spring-boot-starter-websocket/blob/master/LICENSE"><img src="https://img.shields.io/github/license/JDK-Plus/spring-boot-starter-websocket.svg" /></a>
+    <a href="https://github.com/JDK-Plus/spring-boot-starter-websocket/releases"><img src="https://img.shields.io/github/release/JDK-Plus/spring-boot-starter-websocket.svg" /></a>
+    <a href="https://github.com/JDK-Plus/spring-boot-starter-websocket/stargazers"><img src="https://img.shields.io/github/stars/JDK-Plus/spring-boot-starter-websocket.svg" /></a>
+    <a href="https://github.com/JDK-Plus/spring-boot-starter-websocket/network/members"><img src="https://img.shields.io/github/forks/JDK-Plus/spring-boot-starter-websocket.svg" /></a>
 </p>
 
 
@@ -24,9 +24,46 @@
 
 ```
 plus.jdk.websocket.enabled=true
+
+# 指定host
+plus.jdk.websocket.host=0.0.0.0
+
+# 指定websocket端口
 plus.jdk.websocket.port=10001
-plus.jdk.websocket.cors-allow-credentials=true
+
+
+# 指定自定义实现的验证器
 plus.jdk.websocket.session-authenticator=plus.jdk.broadcast.test.session.WSSessionAuthenticator
+
+# boss线程池线程数，默认为1
+plus.jdk.websocket.boss-loop-group-threads=1
+
+# worker线程池线程数,若不指定则默认为CPU核心数 * 2
+plus.jdk.websocket.worker-loop-group-threads=5
+
+# 是否需允许跨域
+plus.jdk.websocket.cors-allow-credentials=true
+
+# 跨域的header头
+plus.jdk.websocket.cors-origins[0]=""
+
+# 是否使用 NioEventLoopGroup 来处理请求
+plus.jdk.websocket.use-event-executor-group=true
+
+# 指定 NioEventLoopGroup 线程池数量
+plus.jdk.websocket.event-executor-group-threads=0
+
+# 连接超时时间
+#plus.jdk.websocket.connect-timeout-millis=
+
+# 指定了内核为此套接口排队的最大连接个数
+#plus.jdk.websocket.SO_BACKLOG=
+
+# 旋转计数用于控制每次Netty写入操作调用基础socket.write(...)的次数
+#plus.jdk.websocket.write-spin-count=
+
+# 日志等级
+plus.jdk.websocket.log-level=debug
 ```
 
 

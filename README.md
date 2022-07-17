@@ -1,12 +1,12 @@
 <h3 align="center">A springboot websocket component written using netty。</h3>
 <p align="center">
-    <a href="https://github.com/JDK-Plus/cli-plus/blob/master/LICENSE"><img src="https://img.shields.io/github/license/JDK-Plus/cli-plus.svg" /></a>
-    <a href="https://github.com/JDK-Plus/cli-plus/releases"><img src="https://img.shields.io/github/release/JDK-Plus/cli-plus.svg" /></a>
-    <a href="https://github.com/JDK-Plus/cli-plus/stargazers"><img src="https://img.shields.io/github/stars/JDK-Plus/cli-plus.svg" /></a>
-    <a href="https://github.com/JDK-Plus/cli-plus/network/members"><img src="https://img.shields.io/github/forks/JDK-Plus/cli-plus.svg" /></a>
+    <a href="https://github.com/JDK-Plus/spring-boot-starter-websocket/blob/master/LICENSE"><img src="https://img.shields.io/github/license/JDK-Plus/spring-boot-starter-websocket.svg" /></a>
+    <a href="https://github.com/JDK-Plus/spring-boot-starter-websocket/releases"><img src="https://img.shields.io/github/release/JDK-Plus/spring-boot-starter-websocket.svg" /></a>
+    <a href="https://github.com/JDK-Plus/spring-boot-starter-websocket/stargazers"><img src="https://img.shields.io/github/stars/JDK-Plus/spring-boot-starter-websocket.svg" /></a>
+    <a href="https://github.com/JDK-Plus/spring-boot-starter-websocket/network/members"><img src="https://img.shields.io/github/forks/JDK-Plus/spring-boot-starter-websocket.svg" /></a>
 </p>
 
-- [中文文档](README.md)
+- [中文文档](README-CN.md)
 
 ## Maven Dependencies
 
@@ -22,8 +22,46 @@
 
 ```
 plus.jdk.websocket.enabled=true
+
+# Specify host
+plus.jdk.websocket.host=0.0.0.0
+
+# Specify the websocket port
 plus.jdk.websocket.port=10001
+
+
+# Specify a custom-implemented validator
+plus.jdk.websocket.session-authenticator=plus.jdk.broadcast.test.session.WSSessionAuthenticator
+
+# The number of threads in the boss thread pool, the default is 1
+plus.jdk.websocket.boss-loop-group-threads=1
+
+# The number of worker thread pool threads, if not specified, the default is the number of CPU cores * 2
+plus.jdk.websocket.worker-loop-group-threads=5
+
+# Whether to allow cross-domain
 plus.jdk.websocket.cors-allow-credentials=true
+
+# cross-domain header
+plus.jdk.websocket.cors-origins[0]=""
+
+# Whether to use NioEventLoopGroup to handle requests
+plus.jdk.websocket.use-event-executor-group=true
+
+# Specify the number of NioEventLoopGroup thread pools
+plus.jdk.websocket.event-executor-group-threads=0
+
+# connection timeout
+#plus.jdk.websocket.connect-timeout-millis=
+
+# Specifies the maximum number of connections that the kernel queues for this socket
+#plus.jdk.websocket.SO_BACKLOG=
+
+# The spin count is used to control how many times the underlying socket.write(...) is called per Netty write operation
+#plus.jdk.websocket.write-spin-count=
+
+# log level
+plus.jdk.websocket.log-level=debug
 ```
 
 ## Example of use
