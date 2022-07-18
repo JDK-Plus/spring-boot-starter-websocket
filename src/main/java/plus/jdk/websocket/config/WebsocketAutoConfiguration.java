@@ -13,6 +13,7 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.web.context.support.WebApplicationObjectSupport;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 import plus.jdk.websocket.global.ServerEndpointExporter;
+import plus.jdk.websocket.global.SessionGroupManager;
 import plus.jdk.websocket.global.WebsocketDispatcher;
 import plus.jdk.websocket.annotations.*;
 import plus.jdk.websocket.properties.WebsocketProperties;
@@ -32,6 +33,11 @@ public class WebsocketAutoConfiguration extends WebApplicationObjectSupport impl
     private BeanFactory beanFactory;
 
     public WebsocketAutoConfiguration(WebsocketProperties properties) {
+    }
+
+    @Bean
+    public SessionGroupManager SessionGroupManager() {
+        return new SessionGroupManager();
     }
 
     @Bean

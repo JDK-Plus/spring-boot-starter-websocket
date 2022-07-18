@@ -14,6 +14,7 @@ import io.netty.handler.timeout.IdleStateHandler;
 import io.netty.util.AttributeKey;
 import io.netty.util.CharsetUtil;
 import org.springframework.beans.TypeMismatchException;
+import org.springframework.beans.factory.BeanFactory;
 import org.springframework.util.StringUtils;
 import plus.jdk.websocket.common.WebsocketCommonException;
 import plus.jdk.websocket.properties.WebsocketProperties;
@@ -31,10 +32,14 @@ public class HttpServerHandler extends SimpleChannelInboundHandler<FullHttpReque
 
     private final NioEventLoopGroup eventLoopGroup;
 
-    public HttpServerHandler(WebsocketProperties properties, WebsocketDispatcher websocketDispatcher, NioEventLoopGroup worker) {
+    private final BeanFactory beanFactory;
+
+    public HttpServerHandler(WebsocketProperties properties, WebsocketDispatcher websocketDispatcher,
+                             NioEventLoopGroup worker, BeanFactory beanFactory) {
         this.properties = properties;
         this.websocketDispatcher = websocketDispatcher;
         this.eventLoopGroup = worker;
+        this.beanFactory = beanFactory;
     }
 
     @Override
@@ -141,9 +146,9 @@ public class HttpServerHandler extends SimpleChannelInboundHandler<FullHttpReque
             }
             pipeline.addLast(new WebSocketFrameAggregator(Integer.MAX_VALUE));
             if (properties.getUseEventExecutorGroup()) {
-                pipeline.addLast(eventLoopGroup, new WebSocketServerHandler(websocketDispatcher));
+                pipeline.addLast(eventLoopGroup, new WebSocketServerHandler(websocketDispatcher, beanFactory));
             } else {
-                pipeline.addLast(new WebSocketServerHandler(websocketDispatcher));
+                pipeline.addLast(new WebSocketServerHandler(websocketDispatcher, beanFactory));
             }
             handshaker.handshake(channel, req).addListener(future -> {
                 if (future.isSuccess()) {

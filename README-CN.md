@@ -1,4 +1,6 @@
-
+<div align="center">
+    <img align="center" src="https://jdk.plus/img/dog.png" alt="drawing" style="width:100%;"/>
+</div>
 <h3 align="center">这是一款使用netty编写的springboot websocket组件。</h3>
 <p align="center">
     <a href="https://github.com/JDK-Plus/spring-boot-starter-websocket/blob/master/LICENSE"><img src="https://img.shields.io/github/license/JDK-Plus/spring-boot-starter-websocket.svg" /></a>
@@ -17,7 +19,7 @@
 <dependency>
     <groupId>plus.jdk</groupId>
     <artifactId>spring-boot-starter-websocket</artifactId>
-    <version>1.0.1</version>
+    <version>1.0.2</version>
 </dependency>
 ```
 ## 配置
@@ -197,3 +199,43 @@ public class DemoHandler {
 }
 ```
 
+### 使用websocket连接主动向用户客户端推送消息
+
+```java
+package plus.jdk.broadcast.test.controller;
+
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
+import plus.jdk.websocket.global.SessionGroupManager;
+import plus.jdk.websocket.model.IWsSession;
+
+import javax.annotation.Resource;
+import java.util.concurrent.ConcurrentLinkedDeque;
+
+
+@RestController
+public class MessageController {
+
+    /**
+     * 该bean实例已经在底层封装好
+     */
+    @Resource
+    private SessionGroupManager sessionGroupManager;
+
+    @RequestMapping(value = "/message/send", method = {RequestMethod.GET})
+    public Object sendMessage(@RequestParam String uid, @RequestParam String content){
+
+        // 调用sessionGroupManager.getSession()函数获取当前用户在该实例中的所有连接
+        // 你可以在 IWSSessionAuthenticator 的实现中自行实现自己的session定义，将消息分发给不同的设备
+        // 或向远端上报当前用户的连接到底在哪些机器上
+        ConcurrentLinkedDeque<IWsSession<?>> sessions = sessionGroupManager.getSession(uid, "/ws/message");
+        for(IWsSession<?> wsSession: sessions) {
+            wsSession.sendText(content); // 发送文本消息
+            wsSession.sendBinary(content.getBytes()); // 发送二进制消息
+        }
+        return "success";
+    }
+}
+```

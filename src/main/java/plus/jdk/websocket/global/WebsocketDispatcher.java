@@ -87,7 +87,7 @@ public class WebsocketDispatcher {
                 if (corsConfig != null) {
                     ch.pipeline().addLast(new CorsHandler(corsConfig));
                 }
-                ch.pipeline().addLast("handler", new HttpServerHandler(properties, websocketDispatcher,  worker));//自定义的业务handler
+                ch.pipeline().addLast("handler", new HttpServerHandler(properties, websocketDispatcher,  worker, beanFactory));//自定义的业务handler
             }
         });
 
@@ -194,8 +194,10 @@ public class WebsocketDispatcher {
 
     private void setSession(Channel channel, FullHttpRequest req, String path) throws Exception {
         IWSSessionAuthenticator<?> authenticator = beanFactory.getBean(properties.getSessionAuthenticator());
+        SessionGroupManager sessionGroupManager = beanFactory.getBean(SessionGroupManager.class);
         IWsSession<?> wsSession = authenticator.authenticate(channel, req, path);
         channel.attr(SESSION_KEY).set(wsSession);
+        sessionGroupManager.addSession(path, wsSession);
     }
 
     public void doOnClose(Channel channel) {

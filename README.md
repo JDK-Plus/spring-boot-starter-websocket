@@ -1,3 +1,6 @@
+<div align="center">
+    <img align="center" src="https://jdk.plus/img/dog.png" alt="drawing" style="width:100%;"/>
+</div>
 <h3 align="center">A springboot websocket component written using netty。</h3>
 <p align="center">
     <a href="https://github.com/JDK-Plus/spring-boot-starter-websocket/blob/master/LICENSE"><img src="https://img.shields.io/github/license/JDK-Plus/spring-boot-starter-websocket.svg" /></a>
@@ -14,7 +17,7 @@
 <dependency>
     <groupId>plus.jdk</groupId>
     <artifactId>spring-boot-starter-websocket</artifactId>
-    <version>1.0.1</version>
+    <version>1.0.2</version>
 </dependency>
 ```
 
@@ -195,3 +198,43 @@ public class DemoHandler {
 }
 ```
 
+### Actively push messages to user clients using websocket connections
+
+```java
+package plus.jdk.broadcast.test.controller;
+
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
+import plus.jdk.websocket.global.SessionGroupManager;
+import plus.jdk.websocket.model.IWsSession;
+
+import javax.annotation.Resource;
+import java.util.concurrent.ConcurrentLinkedDeque;
+
+
+@RestController
+public class MessageController {
+
+    /**
+     * The bean instance is already encapsulated at the bottom
+     */
+    @Resource
+    private SessionGroupManager sessionGroupManager;
+
+    @RequestMapping(value = "/message/send", method = {RequestMethod.GET})
+    public Object sendMessage(@RequestParam String uid, @RequestParam String content){
+
+        // Call the sessionGroupManager.getSession() function to get all connections of the current user in this instance.
+        // You can implement your own session definition in the implementation of IWSSessionAuthenticator to distribute messages to different devices
+        // Or report to the remote end which machines the current user is connected to
+        ConcurrentLinkedDeque<IWsSession<?>> sessions = sessionGroupManager.getSession(uid, "/ws/message");
+        for(IWsSession<?> wsSession: sessions) {
+            wsSession.sendText(content); // 发送文本消息
+            wsSession.sendBinary(content.getBytes()); // 发送二进制消息
+        }
+        return "success";
+    }
+}
+```
