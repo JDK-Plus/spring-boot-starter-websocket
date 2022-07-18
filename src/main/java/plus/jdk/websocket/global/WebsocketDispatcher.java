@@ -1,10 +1,7 @@
 package plus.jdk.websocket.global;
 
 import io.netty.bootstrap.ServerBootstrap;
-import io.netty.channel.Channel;
-import io.netty.channel.ChannelFuture;
-import io.netty.channel.ChannelInitializer;
-import io.netty.channel.ChannelOption;
+import io.netty.channel.*;
 import io.netty.channel.nio.NioEventLoopGroup;
 import io.netty.channel.socket.SocketChannel;
 import io.netty.channel.socket.nio.NioServerSocketChannel;
@@ -198,6 +195,15 @@ public class WebsocketDispatcher {
         IWsSession<?> wsSession = authenticator.authenticate(channel, req, path);
         channel.attr(SESSION_KEY).set(wsSession);
         sessionGroupManager.addSession(path, wsSession);
+    }
+
+    protected void releaseSession(ChannelHandlerContext ctx) {
+        try{
+            SessionGroupManager sessionGroupManager = beanFactory.getBean(SessionGroupManager.class);
+            sessionGroupManager.releaseChannel(ctx);
+        }catch (Exception e) {
+            log.error(e.getMessage());
+        }
     }
 
     public void doOnClose(Channel channel) {

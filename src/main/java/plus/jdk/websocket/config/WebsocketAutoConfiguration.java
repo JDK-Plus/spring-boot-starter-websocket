@@ -36,8 +36,8 @@ public class WebsocketAutoConfiguration extends WebApplicationObjectSupport impl
     }
 
     @Bean
-    public SessionGroupManager SessionGroupManager() {
-        return new SessionGroupManager();
+    public SessionGroupManager SessionGroupManager(WebsocketProperties properties) {
+        return new SessionGroupManager(beanFactory, properties);
     }
 
     @Bean

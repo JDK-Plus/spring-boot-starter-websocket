@@ -86,5 +86,5 @@ public class WebsocketProperties {
     /**
      * 认证器
      */
-    private Class<? extends IWSSessionAuthenticator> sessionAuthenticator = DefaultSessionAuthenticator.class;
+    private Class<? extends IWSSessionAuthenticator<?>> sessionAuthenticator = DefaultSessionAuthenticator.class;
 }

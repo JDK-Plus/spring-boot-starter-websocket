@@ -1,3 +1,4 @@
+<img align="center" src="https://jdk.plus/img/jdk-plus.png" alt="drawing" style="width:100%;"/>
 <h3 align="center">A springboot websocket component written using netty。</h3>
 <p align="center">
     <a href="https://github.com/JDK-Plus/spring-boot-starter-websocket/blob/master/LICENSE"><img src="https://img.shields.io/github/license/JDK-Plus/spring-boot-starter-websocket.svg" /></a>
@@ -14,7 +15,7 @@
 <dependency>
     <groupId>plus.jdk</groupId>
     <artifactId>spring-boot-starter-websocket</artifactId>
-    <version>1.0.2</version>
+    <version>1.0.3</version>
 </dependency>
 ```
 
@@ -99,34 +100,26 @@ The authenticator must implement the `IWSSessionAuthenticator` interface.
 The usage example is as follows:
 
 ```java
-package plus.jdk.broadcast.test.session;
-
 import io.netty.channel.Channel;
 import io.netty.handler.codec.http.FullHttpRequest;
-import lombok.Getter;
 import org.springframework.stereotype.Component;
 import plus.jdk.websocket.common.HttpWsRequest;
 import plus.jdk.websocket.global.IWSSessionAuthenticator;
-
-import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
+import plus.jdk.websocket.model.IWsSession;
 
 @Component
 public class WSSessionAuthenticator implements IWSSessionAuthenticator<MyWsSession> {
 
-    @Getter
-    private final Map<String, MyWsSession> ourWsSessionMap = new ConcurrentHashMap<>();
+    @Override
+    public MyWsSession authenticate(Channel channel, FullHttpRequest req, String path) {
+        HttpWsRequest httpWsRequest = new HttpWsRequest(req);
+        String uid = httpWsRequest.getQueryValue("uid");
+        return new MyWsSession(uid, channel);
+    }
 
     @Override
-    public MyWsSession authenticate(Channel channel, FullHttpRequest req, String path) throws Exception{
-        HttpWsRequest httpWsRequest = new HttpWsRequest(req);
-        
-        // 此处的uid可根据业务实际情况写入，用于后续的业务逻辑
-        String uid = httpWsRequest.getQueryValue("uid");
-        if(uid == null) {
-            throw new Exception("invalid connect"); // 验证失败，抛出异常
-        }
-        return new MyWsSession(uid, channel);
+    public void onSessionDestroy(IWsSession<MyWsSession> session) {
+        IWSSessionAuthenticator.super.onSessionDestroy(session);
     }
 }
 ```

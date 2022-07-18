@@ -6,10 +6,10 @@
 
     <groupId>plus.jdk</groupId>
     <artifactId>spring-boot-starter-websocket</artifactId>
-    <version>1.0.2</version>
+    <version>1.0.3</version>
 
     <name>spring-boot-starter-websocket</name>
-    <description>A simple websocket component base on netty</description>
+    <description>A simple websocket component base on netty </description>
     <url>https://github.com/JDK-Plus/spring-boot-starter-websocket</url>
 
     <properties>
@@ -125,6 +125,11 @@
                     <artifactId>spring-boot-starter-tomcat</artifactId>
                 </exclusion>
             </exclusions>
+        </dependency>
+        <dependency>
+            <groupId>plus.jdk</groupId>
+            <artifactId>spring-boot-starter-broadcast</artifactId>
+            <version>0.0.4</version>
         </dependency>
     </dependencies>
     <build>
