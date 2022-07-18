@@ -1,6 +1,3 @@
-<div align="center">
-    <img align="center" src="https://jdk.plus/img/dog.png" alt="drawing" style="width:100%;"/>
-</div>
 <h3 align="center">这是一款使用netty编写的springboot websocket组件。</h3>
 <p align="center">
     <a href="https://github.com/JDK-Plus/spring-boot-starter-websocket/blob/master/LICENSE"><img src="https://img.shields.io/github/license/JDK-Plus/spring-boot-starter-websocket.svg" /></a>
