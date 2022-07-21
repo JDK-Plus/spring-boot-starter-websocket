@@ -68,7 +68,7 @@ public class SessionGroupManager {
             if(iWsSession.getChannel() == channel) {
                 try {
                     IWSSessionAuthenticatorManager<?, ? extends IWsSession<?>> sessionAuthManager = beanFactory.getBean(properties.getSessionAuthenticator());
-                    sessionAuthManager.onSessionDestroy(iWsSession, path);
+                    sessionAuthManager.onSessionDestroy(iWsSession, path, properties);
                 }catch(Exception e) {
                     log.error(e.getMessage());
                 }

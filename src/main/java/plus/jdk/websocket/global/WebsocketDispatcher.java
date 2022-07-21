@@ -191,7 +191,7 @@ public class WebsocketDispatcher {
     private void setSession(Channel channel, FullHttpRequest req, String path) throws Exception {
         IWSSessionAuthenticatorManager<?, ?> authenticator = beanFactory.getBean(properties.getSessionAuthenticator());
         SessionGroupManager sessionGroupManager = beanFactory.getBean(SessionGroupManager.class);
-        IWsSession<?> wsSession = authenticator.authenticate(channel, req, path);
+        IWsSession<?> wsSession = authenticator.authenticate(channel, req, path, properties);
         channel.attr(SESSION_KEY).set(wsSession);
         sessionGroupManager.addSession(path, wsSession);
     }

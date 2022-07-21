@@ -11,13 +11,13 @@ public interface IWSSessionAuthenticatorManager<U, T extends IWsSession<U>> {
     /**
      * 当建立连接时鉴权. 若用户无权限，抛出异常即可，否则返回合法的session对象
      */
-    T authenticate(Channel channel, FullHttpRequest req, String path) throws Exception;
+    T authenticate(Channel channel, FullHttpRequest req, String path, WebsocketProperties properties) throws Exception;
 
     /**
      * 当连接断开时,可以通过该回调释放存储的连接数据
      * @param session
      */
-    default void onSessionDestroy(IWsSession<?> session, String path) {
+    default void onSessionDestroy(IWsSession<?> session, String path, WebsocketProperties properties) {
 
     }
 
@@ -31,7 +31,7 @@ public interface IWSSessionAuthenticatorManager<U, T extends IWsSession<U>> {
     /**
      * 返回当前集群有哪些机器
      */
-    default Monitor[] getAllUdpMonitors() {
+    default Monitor[] getAllUdpMonitors(WebsocketProperties properties) {
         return new Monitor[]{};
     }
 }

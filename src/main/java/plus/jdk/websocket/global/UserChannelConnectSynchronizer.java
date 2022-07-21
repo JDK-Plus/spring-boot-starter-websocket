@@ -51,7 +51,7 @@ public class UserChannelConnectSynchronizer implements SchedulingConfigurer, App
         udpBroadcastMessageMonitor = new UdpBroadcastMessageMonitor(broadCastProperties);
         udpMessageBroadcaster = new UdpMessageBroadcaster(broadCastProperties);
         clusterChannelManager = beanFactory.getBean(properties.getSessionAuthenticator());
-        clusterMonitors = clusterChannelManager.getAllUdpMonitors();
+        clusterMonitors = clusterChannelManager.getAllUdpMonitors(properties);
     }
 
     /**
