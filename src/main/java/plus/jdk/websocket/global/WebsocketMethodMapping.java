@@ -29,6 +29,11 @@ public class WebsocketMethodMapping {
     private String path;
 
     /**
+     * 由哪个类来处理请求
+     */
+    private Class<?> handlerClazz;
+
+    /**
      * 处理当前请求的bean对象
      */
     private Object beanObject;

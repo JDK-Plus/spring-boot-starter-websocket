@@ -3,8 +3,9 @@ package plus.jdk.websocket.properties;
 import io.netty.handler.logging.LogLevel;
 import lombok.Data;
 import org.springframework.boot.context.properties.ConfigurationProperties;
-import plus.jdk.websocket.global.DefaultSessionAuthenticator;
-import plus.jdk.websocket.global.IWSSessionAuthenticator;
+import plus.jdk.websocket.global.DefaultSessionAuthenticatorManager;
+import plus.jdk.websocket.global.IWSSessionAuthenticatorManager;
+import plus.jdk.websocket.model.IWsSession;
 
 @Data
 @ConfigurationProperties(prefix = "plus.jdk.websocket")
@@ -84,7 +85,13 @@ public class WebsocketProperties {
     private Integer childOptionSoSndBuf = -1;
 
     /**
+     * udp广播接收端口
+     */
+    private Integer broadcastMonitorPort = 10300;
+
+
+    /**
      * 认证器
      */
-    private Class<? extends IWSSessionAuthenticator<?>> sessionAuthenticator = DefaultSessionAuthenticator.class;
+    private Class<? extends IWSSessionAuthenticatorManager<?, ? extends IWsSession<?>>> sessionAuthenticator = DefaultSessionAuthenticatorManager.class;
 }

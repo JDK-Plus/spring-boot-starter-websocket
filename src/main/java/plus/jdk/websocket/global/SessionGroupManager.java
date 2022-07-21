@@ -35,12 +35,22 @@ public class SessionGroupManager {
         channelModelMap.put(iWsSession.getChannel(), new ChannelModel(uid, path));
     }
 
+    /**
+     * 获取用户在当前机器上建立的连接
+     */
     public <T> ConcurrentLinkedDeque<IWsSession<?>> getSession(T userId, String path) {
         ConcurrentHashMap<String, ConcurrentLinkedDeque<IWsSession<?>>> userSessionMap = sessionMap.get(userId);
         if (userSessionMap == null || userSessionMap.get(path) == null) {
             return new ConcurrentLinkedDeque<>();
         }
         return sessionMap.get(userId).get(path);
+    }
+
+    public <U> void sendText(U userId, String path, byte[] data) {
+        UserChannelConnectSynchronizer channelConnectSynchronizer = beanFactory.getBean(UserChannelConnectSynchronizer.class);
+        @SuppressWarnings("unchecked")
+        IWSSessionAuthenticatorManager<U, ? extends IWsSession<U>> sessionAuthManager = (IWSSessionAuthenticatorManager<U, ? extends IWsSession<U>>) beanFactory.getBean(properties.getSessionAuthenticator());
+        channelConnectSynchronizer.sendBroadcast(userId, path,  data, sessionAuthManager.getUserConnectedMachine(userId, path, properties));
     }
 
     protected void releaseChannel(ChannelHandlerContext ctx) {
@@ -57,8 +67,8 @@ public class SessionGroupManager {
         wsSessionsDeque.removeIf(iWsSession -> {
             if(iWsSession.getChannel() == channel) {
                 try {
-                    IWSSessionAuthenticator<?> iwsSessionAuthenticator = beanFactory.getBean(properties.getSessionAuthenticator());
-                    iwsSessionAuthenticator.onSessionDestroy((IWsSession) iWsSession);
+                    IWSSessionAuthenticatorManager<?, ? extends IWsSession<?>> sessionAuthManager = beanFactory.getBean(properties.getSessionAuthenticator());
+                    sessionAuthManager.onSessionDestroy(iWsSession, path);
                 }catch(Exception e) {
                     log.error(e.getMessage());
                 }

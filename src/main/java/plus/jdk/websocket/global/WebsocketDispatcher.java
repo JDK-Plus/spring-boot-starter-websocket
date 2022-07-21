@@ -22,7 +22,6 @@ import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.TypeMismatchException;
 import org.springframework.beans.factory.BeanFactory;
-import plus.jdk.websocket.common.WebsocketCommonException;
 import plus.jdk.websocket.model.IWsSession;
 import plus.jdk.websocket.properties.WebsocketProperties;
 
@@ -190,7 +189,7 @@ public class WebsocketDispatcher {
     }
 
     private void setSession(Channel channel, FullHttpRequest req, String path) throws Exception {
-        IWSSessionAuthenticator<?> authenticator = beanFactory.getBean(properties.getSessionAuthenticator());
+        IWSSessionAuthenticatorManager<?, ?> authenticator = beanFactory.getBean(properties.getSessionAuthenticator());
         SessionGroupManager sessionGroupManager = beanFactory.getBean(SessionGroupManager.class);
         IWsSession<?> wsSession = authenticator.authenticate(channel, req, path);
         channel.attr(SESSION_KEY).set(wsSession);
