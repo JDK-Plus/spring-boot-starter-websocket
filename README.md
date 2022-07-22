@@ -15,7 +15,7 @@
 <dependency>
     <groupId>plus.jdk</groupId>
     <artifactId>spring-boot-starter-websocket</artifactId>
-    <version>1.0.3</version>
+    <version>1.0.4</version>
 </dependency>
 ```
 
@@ -104,11 +104,11 @@ import io.netty.channel.Channel;
 import io.netty.handler.codec.http.FullHttpRequest;
 import org.springframework.stereotype.Component;
 import plus.jdk.websocket.common.HttpWsRequest;
-import plus.jdk.websocket.global.IWSSessionAuthenticator;
+import plus.jdk.websocket.global.IWSSessionAuthenticatorManager;
 import plus.jdk.websocket.model.IWsSession;
 
 @Component
-public class WSSessionAuthenticator implements IWSSessionAuthenticator<MyWsSession> {
+public class WSSessionAuthenticator implements IWSSessionAuthenticatorManager<MyWsSession> {
 
     @Override
     public MyWsSession authenticate(Channel channel, FullHttpRequest req, String path) {
@@ -119,7 +119,7 @@ public class WSSessionAuthenticator implements IWSSessionAuthenticator<MyWsSessi
 
     @Override
     public void onSessionDestroy(IWsSession<MyWsSession> session) {
-        IWSSessionAuthenticator.super.onSessionDestroy(session);
+        IWSSessionAuthenticatorManager.super.onSessionDestroy(session);
     }
 }
 ```

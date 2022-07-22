@@ -1,0 +1,24 @@
+syntax = "proto3";
+
+package plus.jdk.websocket.protoc;
+
+option java_multiple_files = true;
+option java_package = "plus.jdk.websocket.protoc";
+option java_outer_classname = "WsBroadcastMessage";
+option optimize_for = CODE_SIZE;
+
+
+enum MessageType {
+    MESSAGE_TYPE_TEXT = 0;
+    MESSAGE_TYPE_BINARY = 1;
+}
+
+message WsMessage {
+    optional string uid = 1;
+
+    optional string path = 2;
+
+    optional bytes data = 3;
+
+    optional MessageType type = 4;
+}

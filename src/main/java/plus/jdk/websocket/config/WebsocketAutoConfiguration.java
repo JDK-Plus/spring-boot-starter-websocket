@@ -12,6 +12,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.context.support.WebApplicationObjectSupport;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
+import plus.jdk.websocket.global.UserChannelConnectSynchronizer;
 import plus.jdk.websocket.global.ServerEndpointExporter;
 import plus.jdk.websocket.global.SessionGroupManager;
 import plus.jdk.websocket.global.WebsocketDispatcher;
@@ -48,6 +49,11 @@ public class WebsocketAutoConfiguration extends WebApplicationObjectSupport impl
     @Bean
     public ServerEndpointExporter serverEndpointExporter(WebsocketProperties properties) {
         return new ServerEndpointExporter(websocketDispatcher);
+    }
+
+    @Bean
+    public UserChannelConnectSynchronizer getHeartbeatSynchronizer(WebsocketProperties properties) {
+        return new UserChannelConnectSynchronizer(beanFactory, properties);
     }
 
     @Override
