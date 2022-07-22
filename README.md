@@ -6,6 +6,7 @@
     <a href="https://github.com/JDK-Plus/spring-boot-starter-websocket/stargazers"><img src="https://img.shields.io/github/stars/JDK-Plus/spring-boot-starter-websocket.svg" /></a>
     <a href="https://github.com/JDK-Plus/spring-boot-starter-websocket/network/members"><img src="https://img.shields.io/github/forks/JDK-Plus/spring-boot-starter-websocket.svg" /></a>
 </p>
+<p align="center">This is a websocket component written in netty that supports cluster broadcasting， Perfectly solve the problem that websocket and user single machine cannot communicate with the entire business cluster</p>
 
 - [中文文档](README-CN.md)
 
@@ -63,6 +64,9 @@ plus.jdk.websocket.event-executor-group-threads=0
 
 # log level
 plus.jdk.websocket.log-level=debug
+
+# udp broadcast listening port, if it is less than or equal to 0, it will not listen for messages
+plus.jdk.websocket.broadcast-monitor-port=10300
 ```
 
 ## Example of use
@@ -103,23 +107,42 @@ The usage example is as follows:
 import io.netty.channel.Channel;
 import io.netty.handler.codec.http.FullHttpRequest;
 import org.springframework.stereotype.Component;
+import plus.jdk.broadcast.model.Monitor;
 import plus.jdk.websocket.common.HttpWsRequest;
 import plus.jdk.websocket.global.IWSSessionAuthenticatorManager;
 import plus.jdk.websocket.model.IWsSession;
+import plus.jdk.websocket.properties.WebsocketProperties;
 
 @Component
-public class WSSessionAuthenticator implements IWSSessionAuthenticatorManager<MyWsSession> {
+public class WSSessionAuthenticator implements IWSSessionAuthenticatorManager<String, MyWsSession> {
 
+    /**
+     * The session information is verified in the connection handshake stage. 
+     * If the verification fails, an exception is thrown directly to terminate the handshake process.
+     * If the verification is successful, return a custom session, and use a public storage service such as redis to 
+     * record which machine the current user has established a connection with
+     */
     @Override
-    public MyWsSession authenticate(Channel channel, FullHttpRequest req, String path) {
+    public MyWsSession authenticate(Channel channel, FullHttpRequest req, String path, WebsocketProperties properties) {
         HttpWsRequest httpWsRequest = new HttpWsRequest(req);
         String uid = httpWsRequest.getQueryValue("uid");
         return new MyWsSession(uid, channel);
     }
 
+    /**
+     * When the connection is disconnected, the callback for destroying the session
+     */
     @Override
-    public void onSessionDestroy(IWsSession<MyWsSession> session) {
-        IWSSessionAuthenticatorManager.super.onSessionDestroy(session);
+    public void onSessionDestroy(IWsSession<?> session, String path, WebsocketProperties properties) {
+
+    }
+
+    /**
+     * Returns which machines the current user has established a connection with, and needs to send broadcast push messages to these machines
+     */
+    @Override
+    public Monitor[] getUserConnectedMachine(String userId, String path, WebsocketProperties properties) {
+        return new Monitor[]{new Monitor("127.0.0.1", properties.getBroadcastMonitorPort())};
     }
 }
 ```
@@ -201,6 +224,7 @@ import plus.jdk.websocket.global.SessionGroupManager;
 import plus.jdk.websocket.model.IWsSession;
 
 import javax.annotation.Resource;
+import java.nio.charset.StandardCharsets;
 import java.util.concurrent.ConcurrentLinkedDeque;
 
 
@@ -214,16 +238,20 @@ public class MessageController {
     private SessionGroupManager sessionGroupManager;
 
     @RequestMapping(value = "/message/send", method = {RequestMethod.GET})
-    public Object sendMessage(@RequestParam String uid, @RequestParam String content){
+    public Object sendMessage(@RequestParam String uid, @RequestParam String content) {
 
         // Call the sessionGroupManager.getSession() function to get all connections of the current user in this instance.
         // You can implement your own session definition in the implementation of IWSSessionAuthenticator to distribute messages to different devices
         // Or report to the remote end which machines the current user is connected to
         ConcurrentLinkedDeque<IWsSession<?>> sessions = sessionGroupManager.getSession(uid, "/ws/message");
-        for(IWsSession<?> wsSession: sessions) {
-            wsSession.sendText(content); // 发送文本消息
-            wsSession.sendBinary(content.getBytes()); // 发送二进制消息
-        }
+        
+        // send text message,
+        // If you implement the getUserConnectedMachine method in the IWSSessionAuthenticatorManager interface as required, 
+        // it will send a broadcast and push message to the machine that has established a connection with the user
+        sessionGroupManager.sendText(uid, "/ws/message", content);
+        
+        // send binary message
+        sessionGroupManager.sendBinary(uid, "/ws/message", content.getBytes(StandardCharsets.UTF_8));
         return "success";
     }
 }

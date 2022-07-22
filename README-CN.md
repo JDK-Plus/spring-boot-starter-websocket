@@ -6,6 +6,7 @@
     <a href="https://github.com/JDK-Plus/spring-boot-starter-websocket/stargazers"><img src="https://img.shields.io/github/stars/JDK-Plus/spring-boot-starter-websocket.svg" /></a>
     <a href="https://github.com/JDK-Plus/spring-boot-starter-websocket/network/members"><img src="https://img.shields.io/github/forks/JDK-Plus/spring-boot-starter-websocket.svg" /></a>
 </p>
+<p align="center">这是一款支持集群广播的使用netty编写的websocket组件,完美解决websocket和用户单机无法和整个业务集群通信的问题</p>
 
 
 - [English](README-CN.md)
@@ -67,6 +68,9 @@ plus.jdk.websocket.log-level=debug
 
 # udp广播监听端口
 plus.jdk.websocket.broadcast-monitor-port=10300
+
+# udp广播监听端口，若小于等于0，则不监听消息
+plus.jdk.websocket.broadcast-monitor-port=10300
 ```
 
 
@@ -107,23 +111,40 @@ public class MyWsSession implements IWsSession<String> {
 import io.netty.channel.Channel;
 import io.netty.handler.codec.http.FullHttpRequest;
 import org.springframework.stereotype.Component;
+import plus.jdk.broadcast.model.Monitor;
 import plus.jdk.websocket.common.HttpWsRequest;
 import plus.jdk.websocket.global.IWSSessionAuthenticatorManager;
 import plus.jdk.websocket.model.IWsSession;
+import plus.jdk.websocket.properties.WebsocketProperties;
 
 @Component
-public class WSSessionAuthenticator implements IWSSessionAuthenticatorManager<MyWsSession> {
+public class WSSessionAuthenticator implements IWSSessionAuthenticatorManager<String, MyWsSession> {
 
+    /**
+     * 握手阶段验证session信息，若验证不通过，直接抛出异常终止握手流程。
+     * 若验证成功，则返回自定义的session，并使用redis之类的公用存储服务记录当前用户和哪台机器建立了连接
+     */
     @Override
-    public MyWsSession authenticate(Channel channel, FullHttpRequest req, String path) {
+    public MyWsSession authenticate(Channel channel, FullHttpRequest req, String path, WebsocketProperties properties) {
         HttpWsRequest httpWsRequest = new HttpWsRequest(req);
         String uid = httpWsRequest.getQueryValue("uid");
         return new MyWsSession(uid, channel);
     }
 
+    /**
+     * 当连接断开时，销毁session的回调
+     */
     @Override
-    public void onSessionDestroy(IWsSession<MyWsSession> session) {
-        IWSSessionAuthenticatorManager.super.onSessionDestroy(session);
+    public void onSessionDestroy(IWsSession<?> session, String path, WebsocketProperties properties) {
+
+    }
+
+    /**
+     * 返回当前用户和哪些机器建立了连接，需要向这些机器发送广播推送消息
+     */
+    @Override
+    public Monitor[] getUserConnectedMachine(String userId, String path, WebsocketProperties properties) {
+        return new Monitor[]{new Monitor("127.0.0.1", properties.getBroadcastMonitorPort())};
     }
 }
 ```
@@ -219,15 +240,18 @@ public class MessageController {
 
     @RequestMapping(value = "/message/send", method = {RequestMethod.GET})
     public Object sendMessage(@RequestParam String uid, @RequestParam String content){
-
         // 调用sessionGroupManager.getSession()函数获取当前用户在该实例中的所有连接
         // 你可以在 IWSSessionAuthenticator 的实现中自行实现自己的session定义，将消息分发给不同的设备
         // 或向远端上报当前用户的连接到底在哪些机器上
         ConcurrentLinkedDeque<IWsSession<?>> sessions = sessionGroupManager.getSession(uid, "/ws/message");
-        for(IWsSession<?> wsSession: sessions) {
-            wsSession.sendText(content); // 发送文本消息
-            wsSession.sendBinary(content.getBytes()); // 发送二进制消息
-        }
+
+        // 发送文本消息
+        // 如果你按要求实现了IWSSessionAuthenticatorManager接口中的getUserConnectedMachine方法，那么将会向已经和用户建立连接的机器发送广播，推送消息
+
+        sessionGroupManager.sendText(uid, "/ws/message", content);
+
+        // 发送二进制消息
+        sessionGroupManager.sendBinary(uid, "/ws/message", content.getBytes(StandardCharsets.UTF_8));
         return "success";
     }
 }
