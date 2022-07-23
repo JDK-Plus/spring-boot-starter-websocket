@@ -63,6 +63,7 @@ public class UserChannelConnectSynchronizer implements ApplicationRunner {
         builder.setData(ByteString.copyFrom(data));
         builder.setUid(userId == null ? "" : userId.toString());
         builder.setPath(path);
+        builder.setType(messageType);
         WsMessage wsMessage = builder.build();
         udpMessageBroadcaster.publish(new BroadcastMessage(wsMessage.toByteArray(), Arrays.asList(monitors)));
     }
@@ -77,6 +78,9 @@ public class UserChannelConnectSynchronizer implements ApplicationRunner {
             WsMessage wsMessage = WsMessage.parseFrom(msg.getContent());
             SessionGroupManager sessionGroupManager = beanFactory.getBean(SessionGroupManager.class);
             ConcurrentLinkedDeque<IWsSession<?>> sessions = sessionGroupManager.getSession(wsMessage.getUid(), wsMessage.getPath());
+            if(properties.getPrintBroadcastMessage()) {
+                log.info("receive broadcast message: {}", wsMessage);
+            }
             for (IWsSession<?> session : sessions) {
                 if(MessageType.MESSAGE_TYPE_TEXT.equals(wsMessage.getType())) {
                     session.sendText(new String(wsMessage.getData().toByteArray()));

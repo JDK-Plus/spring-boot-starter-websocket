@@ -89,6 +89,10 @@ public class WebsocketProperties {
      */
     private Integer broadcastMonitorPort = 10300;
 
+    /**
+     * 是否将接收到的udp广播内容打印到日志中
+     */
+    private Boolean printBroadcastMessage = true;
 
     /**
      * 认证器
