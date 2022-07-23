@@ -1,12 +1,12 @@
 <img align="center" src="https://jdk.plus/img/jdk-plus.png" alt="drawing" style="width:100%;"/>
-<h3 align="center">这是一款使用netty编写的springboot websocket组件。</h3>
+<h3 align="center">这是一款使用netty编写的springboot websocket 集群化消息推送的组件。</h3>
 <p align="center">
     <a href="https://github.com/JDK-Plus/spring-boot-starter-websocket/blob/master/LICENSE"><img src="https://img.shields.io/github/license/JDK-Plus/spring-boot-starter-websocket.svg" /></a>
     <a href="https://github.com/JDK-Plus/spring-boot-starter-websocket/releases"><img src="https://img.shields.io/github/release/JDK-Plus/spring-boot-starter-websocket.svg" /></a>
     <a href="https://github.com/JDK-Plus/spring-boot-starter-websocket/stargazers"><img src="https://img.shields.io/github/stars/JDK-Plus/spring-boot-starter-websocket.svg" /></a>
     <a href="https://github.com/JDK-Plus/spring-boot-starter-websocket/network/members"><img src="https://img.shields.io/github/forks/JDK-Plus/spring-boot-starter-websocket.svg" /></a>
 </p>
-<p align="center">这是一款支持集群广播的使用netty编写的websocket组件,完美解决websocket和用户单机无法和整个业务集群通信的问题</p>
+<p align="center">这是一款支持集群广播的使用netty编写的websocket组件,完美解决websocket和用户单机建立连接无法和整个业务集群通信的问题</p>
 
 
 - [English](README-CN.md)
@@ -18,7 +18,7 @@
 <dependency>
     <groupId>plus.jdk</groupId>
     <artifactId>spring-boot-starter-websocket</artifactId>
-    <version>1.0.4</version>
+    <version>1.0.5</version>
 </dependency>
 ```
 ## 配置
@@ -71,6 +71,9 @@ plus.jdk.websocket.broadcast-monitor-port=10300
 
 # udp广播监听端口，若小于等于0，则不监听消息
 plus.jdk.websocket.broadcast-monitor-port=10300
+
+# 是否将接收到的UDP广播信息打印到日志中
+plus.jdk.websocket.print-broadcast-message=true
 ```
 
 
@@ -83,7 +86,7 @@ plus.jdk.websocket.broadcast-monitor-port=10300
 
 业务上session的定义必须实现`IWsSession` 接口。
 
-该接口封装了一个`userId`,该参数用户可以自定义其类型。还有一个channel，后续用户与该对象的交互都依赖于这个对象
+该接口封装了一个`userId`,该参数用户可以自定义其类型。还有一个channel，是当前机器与用户建立的连接
 
 ```java
 package plus.jdk.broadcast.test.session;

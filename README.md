@@ -1,12 +1,12 @@
 <img align="center" src="https://jdk.plus/img/jdk-plus.png" alt="drawing" style="width:100%;"/>
-<h3 align="center">A springboot websocket component written using netty。</h3>
+<h3 align="center">A springboot websocket clustered message push component written by netty.</h3>
 <p align="center">
     <a href="https://github.com/JDK-Plus/spring-boot-starter-websocket/blob/master/LICENSE"><img src="https://img.shields.io/github/license/JDK-Plus/spring-boot-starter-websocket.svg" /></a>
     <a href="https://github.com/JDK-Plus/spring-boot-starter-websocket/releases"><img src="https://img.shields.io/github/release/JDK-Plus/spring-boot-starter-websocket.svg" /></a>
     <a href="https://github.com/JDK-Plus/spring-boot-starter-websocket/stargazers"><img src="https://img.shields.io/github/stars/JDK-Plus/spring-boot-starter-websocket.svg" /></a>
     <a href="https://github.com/JDK-Plus/spring-boot-starter-websocket/network/members"><img src="https://img.shields.io/github/forks/JDK-Plus/spring-boot-starter-websocket.svg" /></a>
 </p>
-<p align="center">This is a websocket component written in netty that supports cluster broadcasting， Perfectly solve the problem that websocket and user single machine cannot communicate with the entire business cluster</p>
+<p align="center">This is a websocket component written with netty that supports cluster broadcasting, which perfectly solves the problem that websocket cannot communicate with the entire business cluster when establishing a connection with user.</p>
 
 - [中文文档](README-CN.md)
 
@@ -16,7 +16,7 @@
 <dependency>
     <groupId>plus.jdk</groupId>
     <artifactId>spring-boot-starter-websocket</artifactId>
-    <version>1.0.4</version>
+    <version>1.0.5</version>
 </dependency>
 ```
 
@@ -67,6 +67,9 @@ plus.jdk.websocket.log-level=debug
 
 # udp broadcast listening port, if it is less than or equal to 0, it will not listen for messages
 plus.jdk.websocket.broadcast-monitor-port=10300
+
+# Whether to print the received UDP broadcast information to the log
+plus.jdk.websocket.print-broadcast-message=true
 ```
 
 ## Example of use
@@ -77,8 +80,8 @@ plus.jdk.websocket.broadcast-monitor-port=10300
 
 It is enough to implement the `IWsSession` interface for session authentication.
 
-This interface encapsulates a `userId`, the parameter user can customize its type. There is also a channel, 
-and subsequent user interactions with the object depend on this object
+This interface encapsulates a `userId`, the parameter user can customize its type. There is also a channel
+which is the connection between the current machine and the user
 
 ```java
 package plus.jdk.broadcast.test.session;
