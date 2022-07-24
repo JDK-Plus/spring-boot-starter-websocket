@@ -4,6 +4,7 @@ import io.netty.handler.logging.LogLevel;
 import lombok.Data;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import plus.jdk.websocket.global.DefaultSessionAuthenticatorManager;
+import plus.jdk.websocket.global.IBroadMessagePromise;
 import plus.jdk.websocket.global.IWSSessionAuthenticatorManager;
 import plus.jdk.websocket.model.IWsSession;
 
@@ -98,4 +99,9 @@ public class WebsocketProperties {
      * 认证器
      */
     private Class<? extends IWSSessionAuthenticatorManager<?, ? extends IWsSession<?>>> sessionAuthenticator = DefaultSessionAuthenticatorManager.class;
+
+    /**
+     * 广播处理结果
+     */
+    private Class<? extends IBroadMessagePromise> messagePushPromise;
 }
