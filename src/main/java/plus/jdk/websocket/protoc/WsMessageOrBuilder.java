@@ -8,62 +8,79 @@ public interface WsMessageOrBuilder extends
     com.google.protobuf.MessageOrBuilder {
 
   /**
-   * <code>optional string uid = 1;</code>
+   * <code>optional string message_id = 1;</code>
+   * @return Whether the messageId field is set.
+   */
+  boolean hasMessageId();
+  /**
+   * <code>optional string message_id = 1;</code>
+   * @return The messageId.
+   */
+  java.lang.String getMessageId();
+  /**
+   * <code>optional string message_id = 1;</code>
+   * @return The bytes for messageId.
+   */
+  com.google.protobuf.ByteString
+      getMessageIdBytes();
+
+  /**
+   * <code>optional string uid = 2;</code>
    * @return Whether the uid field is set.
    */
   boolean hasUid();
   /**
-   * <code>optional string uid = 1;</code>
+   * <code>optional string uid = 2;</code>
    * @return The uid.
    */
   java.lang.String getUid();
   /**
-   * <code>optional string uid = 1;</code>
+   * <code>optional string uid = 2;</code>
    * @return The bytes for uid.
    */
   com.google.protobuf.ByteString
       getUidBytes();
 
   /**
-   * <code>optional string path = 2;</code>
+   * <code>optional string path = 3;</code>
    * @return Whether the path field is set.
    */
   boolean hasPath();
   /**
-   * <code>optional string path = 2;</code>
+   * <code>optional string path = 3;</code>
    * @return The path.
    */
   java.lang.String getPath();
   /**
-   * <code>optional string path = 2;</code>
+   * <code>optional string path = 3;</code>
    * @return The bytes for path.
    */
   com.google.protobuf.ByteString
       getPathBytes();
 
   /**
-   * <code>optional bytes data = 3;</code>
+   * <code>optional bytes data = 4;</code>
    * @return Whether the data field is set.
    */
   boolean hasData();
   /**
-   * <code>optional bytes data = 3;</code>
+   * <code>optional bytes data = 4;</code>
    * @return The data.
    */
   com.google.protobuf.ByteString getData();
 
   /**
-   * <code>optional .plus.jdk.websocket.protoc.MessageType type = 4;</code>
+   * <code>optional .plus.jdk.websocket.protoc.MessageType type = 5;</code>
    * @return Whether the type field is set.
    */
   boolean hasType();
   /**
-   * <code>optional .plus.jdk.websocket.protoc.MessageType type = 4;</code>
+   * <code>optional .plus.jdk.websocket.protoc.MessageType type = 5;</code>
    * @return The enum numeric value on the wire for type.
    */
   int getTypeValue();
   /**
-   * <code>optional .plus.jdk.websocket.protoc.MessageType type = 4;</code>
+   * <code>optional .plus.jdk.websocket.protoc.MessageType type = 5;</code>
    * @return The type.
    */
   plus.jdk.websocket.protoc.MessageType getType();

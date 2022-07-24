@@ -14,11 +14,14 @@ enum MessageType {
 }
 
 message WsMessage {
-    optional string uid = 1;
 
-    optional string path = 2;
+    optional string message_id = 1;
 
-    optional bytes data = 3;
+    optional string uid = 2;
 
-    optional MessageType type = 4;
+    optional string path = 3;
+
+    optional bytes data = 4;
+
+    optional MessageType type = 5;
 }

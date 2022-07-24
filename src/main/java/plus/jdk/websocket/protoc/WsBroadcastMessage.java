@@ -29,10 +29,11 @@ public final class WsBroadcastMessage {
   static {
     java.lang.String[] descriptorData = {
       "\n\rmessage.proto\022\031plus.jdk.websocket.prot" +
-      "oc\"\241\001\n\tWsMessage\022\020\n\003uid\030\001 \001(\tH\000\210\001\001\022\021\n\004pa" +
-      "th\030\002 \001(\tH\001\210\001\001\022\021\n\004data\030\003 \001(\014H\002\210\001\001\0229\n\004type" +
-      "\030\004 \001(\0162&.plus.jdk.websocket.protoc.Messa" +
-      "geTypeH\003\210\001\001B\006\n\004_uidB\007\n\005_pathB\007\n\005_dataB\007\n" +
+      "oc\"\311\001\n\tWsMessage\022\027\n\nmessage_id\030\001 \001(\tH\000\210\001" +
+      "\001\022\020\n\003uid\030\002 \001(\tH\001\210\001\001\022\021\n\004path\030\003 \001(\tH\002\210\001\001\022\021" +
+      "\n\004data\030\004 \001(\014H\003\210\001\001\0229\n\004type\030\005 \001(\0162&.plus.j" +
+      "dk.websocket.protoc.MessageTypeH\004\210\001\001B\r\n\013" +
+      "_message_idB\006\n\004_uidB\007\n\005_pathB\007\n\005_dataB\007\n" +
       "\005_type*=\n\013MessageType\022\025\n\021MESSAGE_TYPE_TE" +
       "XT\020\000\022\027\n\023MESSAGE_TYPE_BINARY\020\001B3\n\031plus.jd" +
       "k.websocket.protocB\022WsBroadcastMessageH\002" +
@@ -47,7 +48,7 @@ public final class WsBroadcastMessage {
     internal_static_plus_jdk_websocket_protoc_WsMessage_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_plus_jdk_websocket_protoc_WsMessage_descriptor,
-        new java.lang.String[] { "Uid", "Path", "Data", "Type", "Uid", "Path", "Data", "Type", });
+        new java.lang.String[] { "MessageId", "Uid", "Path", "Data", "Type", "MessageId", "Uid", "Path", "Data", "Type", });
   }
 
   // @@protoc_insertion_point(outer_class_scope)

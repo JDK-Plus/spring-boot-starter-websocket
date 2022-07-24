@@ -16,6 +16,7 @@ private static final long serialVersionUID = 0L;
     super(builder);
   }
   private WsMessage() {
+    messageId_ = "";
     uid_ = "";
     path_ = "";
     data_ = com.google.protobuf.ByteString.EMPTY;
@@ -48,18 +49,64 @@ private static final long serialVersionUID = 0L;
   }
 
   private int bitField0_;
-  public static final int UID_FIELD_NUMBER = 1;
+  public static final int MESSAGE_ID_FIELD_NUMBER = 1;
+  private volatile java.lang.Object messageId_;
+  /**
+   * <code>optional string message_id = 1;</code>
+   * @return Whether the messageId field is set.
+   */
+  @java.lang.Override
+  public boolean hasMessageId() {
+    return ((bitField0_ & 0x00000001) != 0);
+  }
+  /**
+   * <code>optional string message_id = 1;</code>
+   * @return The messageId.
+   */
+  @java.lang.Override
+  public java.lang.String getMessageId() {
+    java.lang.Object ref = messageId_;
+    if (ref instanceof java.lang.String) {
+      return (java.lang.String) ref;
+    } else {
+      com.google.protobuf.ByteString bs = 
+          (com.google.protobuf.ByteString) ref;
+      java.lang.String s = bs.toStringUtf8();
+      messageId_ = s;
+      return s;
+    }
+  }
+  /**
+   * <code>optional string message_id = 1;</code>
+   * @return The bytes for messageId.
+   */
+  @java.lang.Override
+  public com.google.protobuf.ByteString
+      getMessageIdBytes() {
+    java.lang.Object ref = messageId_;
+    if (ref instanceof java.lang.String) {
+      com.google.protobuf.ByteString b = 
+          com.google.protobuf.ByteString.copyFromUtf8(
+              (java.lang.String) ref);
+      messageId_ = b;
+      return b;
+    } else {
+      return (com.google.protobuf.ByteString) ref;
+    }
+  }
+
+  public static final int UID_FIELD_NUMBER = 2;
   private volatile java.lang.Object uid_;
   /**
-   * <code>optional string uid = 1;</code>
+   * <code>optional string uid = 2;</code>
    * @return Whether the uid field is set.
    */
   @java.lang.Override
   public boolean hasUid() {
-    return ((bitField0_ & 0x00000001) != 0);
+    return ((bitField0_ & 0x00000002) != 0);
   }
   /**
-   * <code>optional string uid = 1;</code>
+   * <code>optional string uid = 2;</code>
    * @return The uid.
    */
   @java.lang.Override
@@ -76,7 +123,7 @@ private static final long serialVersionUID = 0L;
     }
   }
   /**
-   * <code>optional string uid = 1;</code>
+   * <code>optional string uid = 2;</code>
    * @return The bytes for uid.
    */
   @java.lang.Override
@@ -94,18 +141,18 @@ private static final long serialVersionUID = 0L;
     }
   }
 
-  public static final int PATH_FIELD_NUMBER = 2;
+  public static final int PATH_FIELD_NUMBER = 3;
   private volatile java.lang.Object path_;
   /**
-   * <code>optional string path = 2;</code>
+   * <code>optional string path = 3;</code>
    * @return Whether the path field is set.
    */
   @java.lang.Override
   public boolean hasPath() {
-    return ((bitField0_ & 0x00000002) != 0);
+    return ((bitField0_ & 0x00000004) != 0);
   }
   /**
-   * <code>optional string path = 2;</code>
+   * <code>optional string path = 3;</code>
    * @return The path.
    */
   @java.lang.Override
@@ -122,7 +169,7 @@ private static final long serialVersionUID = 0L;
     }
   }
   /**
-   * <code>optional string path = 2;</code>
+   * <code>optional string path = 3;</code>
    * @return The bytes for path.
    */
   @java.lang.Override
@@ -140,18 +187,18 @@ private static final long serialVersionUID = 0L;
     }
   }
 
-  public static final int DATA_FIELD_NUMBER = 3;
+  public static final int DATA_FIELD_NUMBER = 4;
   private com.google.protobuf.ByteString data_;
   /**
-   * <code>optional bytes data = 3;</code>
+   * <code>optional bytes data = 4;</code>
    * @return Whether the data field is set.
    */
   @java.lang.Override
   public boolean hasData() {
-    return ((bitField0_ & 0x00000004) != 0);
+    return ((bitField0_ & 0x00000008) != 0);
   }
   /**
-   * <code>optional bytes data = 3;</code>
+   * <code>optional bytes data = 4;</code>
    * @return The data.
    */
   @java.lang.Override
@@ -159,24 +206,24 @@ private static final long serialVersionUID = 0L;
     return data_;
   }
 
-  public static final int TYPE_FIELD_NUMBER = 4;
+  public static final int TYPE_FIELD_NUMBER = 5;
   private int type_;
   /**
-   * <code>optional .plus.jdk.websocket.protoc.MessageType type = 4;</code>
+   * <code>optional .plus.jdk.websocket.protoc.MessageType type = 5;</code>
    * @return Whether the type field is set.
    */
   @java.lang.Override public boolean hasType() {
-    return ((bitField0_ & 0x00000008) != 0);
+    return ((bitField0_ & 0x00000010) != 0);
   }
   /**
-   * <code>optional .plus.jdk.websocket.protoc.MessageType type = 4;</code>
+   * <code>optional .plus.jdk.websocket.protoc.MessageType type = 5;</code>
    * @return The enum numeric value on the wire for type.
    */
   @java.lang.Override public int getTypeValue() {
     return type_;
   }
   /**
-   * <code>optional .plus.jdk.websocket.protoc.MessageType type = 4;</code>
+   * <code>optional .plus.jdk.websocket.protoc.MessageType type = 5;</code>
    * @return The type.
    */
   @java.lang.Override public plus.jdk.websocket.protoc.MessageType getType() {
@@ -313,14 +360,16 @@ private static final long serialVersionUID = 0L;
     @java.lang.Override
     public Builder clear() {
       super.clear();
-      uid_ = "";
+      messageId_ = "";
       bitField0_ = (bitField0_ & ~0x00000001);
-      path_ = "";
+      uid_ = "";
       bitField0_ = (bitField0_ & ~0x00000002);
-      data_ = com.google.protobuf.ByteString.EMPTY;
+      path_ = "";
       bitField0_ = (bitField0_ & ~0x00000004);
-      type_ = 0;
+      data_ = com.google.protobuf.ByteString.EMPTY;
       bitField0_ = (bitField0_ & ~0x00000008);
+      type_ = 0;
+      bitField0_ = (bitField0_ & ~0x00000010);
       return this;
     }
 
@@ -352,17 +401,21 @@ private static final long serialVersionUID = 0L;
       if (((from_bitField0_ & 0x00000001) != 0)) {
         to_bitField0_ |= 0x00000001;
       }
-      result.uid_ = uid_;
+      result.messageId_ = messageId_;
       if (((from_bitField0_ & 0x00000002) != 0)) {
         to_bitField0_ |= 0x00000002;
       }
-      result.path_ = path_;
+      result.uid_ = uid_;
       if (((from_bitField0_ & 0x00000004) != 0)) {
         to_bitField0_ |= 0x00000004;
       }
-      result.data_ = data_;
+      result.path_ = path_;
       if (((from_bitField0_ & 0x00000008) != 0)) {
         to_bitField0_ |= 0x00000008;
+      }
+      result.data_ = data_;
+      if (((from_bitField0_ & 0x00000010) != 0)) {
+        to_bitField0_ |= 0x00000010;
       }
       result.type_ = type_;
       result.bitField0_ = to_bitField0_;
@@ -404,16 +457,99 @@ private static final long serialVersionUID = 0L;
     }
     private int bitField0_;
 
-    private java.lang.Object uid_ = "";
+    private java.lang.Object messageId_ = "";
     /**
-     * <code>optional string uid = 1;</code>
-     * @return Whether the uid field is set.
+     * <code>optional string message_id = 1;</code>
+     * @return Whether the messageId field is set.
      */
-    public boolean hasUid() {
+    public boolean hasMessageId() {
       return ((bitField0_ & 0x00000001) != 0);
     }
     /**
-     * <code>optional string uid = 1;</code>
+     * <code>optional string message_id = 1;</code>
+     * @return The messageId.
+     */
+    public java.lang.String getMessageId() {
+      java.lang.Object ref = messageId_;
+      if (!(ref instanceof java.lang.String)) {
+        com.google.protobuf.ByteString bs =
+            (com.google.protobuf.ByteString) ref;
+        java.lang.String s = bs.toStringUtf8();
+        messageId_ = s;
+        return s;
+      } else {
+        return (java.lang.String) ref;
+      }
+    }
+    /**
+     * <code>optional string message_id = 1;</code>
+     * @return The bytes for messageId.
+     */
+    public com.google.protobuf.ByteString
+        getMessageIdBytes() {
+      java.lang.Object ref = messageId_;
+      if (ref instanceof String) {
+        com.google.protobuf.ByteString b = 
+            com.google.protobuf.ByteString.copyFromUtf8(
+                (java.lang.String) ref);
+        messageId_ = b;
+        return b;
+      } else {
+        return (com.google.protobuf.ByteString) ref;
+      }
+    }
+    /**
+     * <code>optional string message_id = 1;</code>
+     * @param value The messageId to set.
+     * @return This builder for chaining.
+     */
+    public Builder setMessageId(
+        java.lang.String value) {
+      if (value == null) {
+    throw new NullPointerException();
+  }
+  bitField0_ |= 0x00000001;
+      messageId_ = value;
+      onChanged();
+      return this;
+    }
+    /**
+     * <code>optional string message_id = 1;</code>
+     * @return This builder for chaining.
+     */
+    public Builder clearMessageId() {
+      bitField0_ = (bitField0_ & ~0x00000001);
+      messageId_ = getDefaultInstance().getMessageId();
+      onChanged();
+      return this;
+    }
+    /**
+     * <code>optional string message_id = 1;</code>
+     * @param value The bytes for messageId to set.
+     * @return This builder for chaining.
+     */
+    public Builder setMessageIdBytes(
+        com.google.protobuf.ByteString value) {
+      if (value == null) {
+    throw new NullPointerException();
+  }
+  checkByteStringIsUtf8(value);
+      bitField0_ |= 0x00000001;
+      messageId_ = value;
+      onChanged();
+      return this;
+    }
+
+    private java.lang.Object uid_ = "";
+    /**
+     * <code>optional string uid = 2;</code>
+     * @return Whether the uid field is set.
+     */
+    public boolean hasUid() {
+      return ((bitField0_ & 0x00000002) != 0);
+    }
+    /**
+     * <code>optional string uid = 2;</code>
      * @return The uid.
      */
     public java.lang.String getUid() {
@@ -429,7 +565,7 @@ private static final long serialVersionUID = 0L;
       }
     }
     /**
-     * <code>optional string uid = 1;</code>
+     * <code>optional string uid = 2;</code>
      * @return The bytes for uid.
      */
     public com.google.protobuf.ByteString
@@ -446,7 +582,7 @@ private static final long serialVersionUID = 0L;
       }
     }
     /**
-     * <code>optional string uid = 1;</code>
+     * <code>optional string uid = 2;</code>
      * @param value The uid to set.
      * @return This builder for chaining.
      */
@@ -455,23 +591,23 @@ private static final long serialVersionUID = 0L;
       if (value == null) {
     throw new NullPointerException();
   }
-  bitField0_ |= 0x00000001;
+  bitField0_ |= 0x00000002;
       uid_ = value;
       onChanged();
       return this;
     }
     /**
-     * <code>optional string uid = 1;</code>
+     * <code>optional string uid = 2;</code>
      * @return This builder for chaining.
      */
     public Builder clearUid() {
-      bitField0_ = (bitField0_ & ~0x00000001);
+      bitField0_ = (bitField0_ & ~0x00000002);
       uid_ = getDefaultInstance().getUid();
       onChanged();
       return this;
     }
     /**
-     * <code>optional string uid = 1;</code>
+     * <code>optional string uid = 2;</code>
      * @param value The bytes for uid to set.
      * @return This builder for chaining.
      */
@@ -481,7 +617,7 @@ private static final long serialVersionUID = 0L;
     throw new NullPointerException();
   }
   checkByteStringIsUtf8(value);
-      bitField0_ |= 0x00000001;
+      bitField0_ |= 0x00000002;
       uid_ = value;
       onChanged();
       return this;
@@ -489,14 +625,14 @@ private static final long serialVersionUID = 0L;
 
     private java.lang.Object path_ = "";
     /**
-     * <code>optional string path = 2;</code>
+     * <code>optional string path = 3;</code>
      * @return Whether the path field is set.
      */
     public boolean hasPath() {
-      return ((bitField0_ & 0x00000002) != 0);
+      return ((bitField0_ & 0x00000004) != 0);
     }
     /**
-     * <code>optional string path = 2;</code>
+     * <code>optional string path = 3;</code>
      * @return The path.
      */
     public java.lang.String getPath() {
@@ -512,7 +648,7 @@ private static final long serialVersionUID = 0L;
       }
     }
     /**
-     * <code>optional string path = 2;</code>
+     * <code>optional string path = 3;</code>
      * @return The bytes for path.
      */
     public com.google.protobuf.ByteString
@@ -529,7 +665,7 @@ private static final long serialVersionUID = 0L;
       }
     }
     /**
-     * <code>optional string path = 2;</code>
+     * <code>optional string path = 3;</code>
      * @param value The path to set.
      * @return This builder for chaining.
      */
@@ -538,23 +674,23 @@ private static final long serialVersionUID = 0L;
       if (value == null) {
     throw new NullPointerException();
   }
-  bitField0_ |= 0x00000002;
+  bitField0_ |= 0x00000004;
       path_ = value;
       onChanged();
       return this;
     }
     /**
-     * <code>optional string path = 2;</code>
+     * <code>optional string path = 3;</code>
      * @return This builder for chaining.
      */
     public Builder clearPath() {
-      bitField0_ = (bitField0_ & ~0x00000002);
+      bitField0_ = (bitField0_ & ~0x00000004);
       path_ = getDefaultInstance().getPath();
       onChanged();
       return this;
     }
     /**
-     * <code>optional string path = 2;</code>
+     * <code>optional string path = 3;</code>
      * @param value The bytes for path to set.
      * @return This builder for chaining.
      */
@@ -564,7 +700,7 @@ private static final long serialVersionUID = 0L;
     throw new NullPointerException();
   }
   checkByteStringIsUtf8(value);
-      bitField0_ |= 0x00000002;
+      bitField0_ |= 0x00000004;
       path_ = value;
       onChanged();
       return this;
@@ -572,15 +708,15 @@ private static final long serialVersionUID = 0L;
 
     private com.google.protobuf.ByteString data_ = com.google.protobuf.ByteString.EMPTY;
     /**
-     * <code>optional bytes data = 3;</code>
+     * <code>optional bytes data = 4;</code>
      * @return Whether the data field is set.
      */
     @java.lang.Override
     public boolean hasData() {
-      return ((bitField0_ & 0x00000004) != 0);
+      return ((bitField0_ & 0x00000008) != 0);
     }
     /**
-     * <code>optional bytes data = 3;</code>
+     * <code>optional bytes data = 4;</code>
      * @return The data.
      */
     @java.lang.Override
@@ -588,7 +724,7 @@ private static final long serialVersionUID = 0L;
       return data_;
     }
     /**
-     * <code>optional bytes data = 3;</code>
+     * <code>optional bytes data = 4;</code>
      * @param value The data to set.
      * @return This builder for chaining.
      */
@@ -596,17 +732,17 @@ private static final long serialVersionUID = 0L;
       if (value == null) {
     throw new NullPointerException();
   }
-  bitField0_ |= 0x00000004;
+  bitField0_ |= 0x00000008;
       data_ = value;
       onChanged();
       return this;
     }
     /**
-     * <code>optional bytes data = 3;</code>
+     * <code>optional bytes data = 4;</code>
      * @return This builder for chaining.
      */
     public Builder clearData() {
-      bitField0_ = (bitField0_ & ~0x00000004);
+      bitField0_ = (bitField0_ & ~0x00000008);
       data_ = getDefaultInstance().getData();
       onChanged();
       return this;
@@ -614,32 +750,32 @@ private static final long serialVersionUID = 0L;
 
     private int type_ = 0;
     /**
-     * <code>optional .plus.jdk.websocket.protoc.MessageType type = 4;</code>
+     * <code>optional .plus.jdk.websocket.protoc.MessageType type = 5;</code>
      * @return Whether the type field is set.
      */
     @java.lang.Override public boolean hasType() {
-      return ((bitField0_ & 0x00000008) != 0);
+      return ((bitField0_ & 0x00000010) != 0);
     }
     /**
-     * <code>optional .plus.jdk.websocket.protoc.MessageType type = 4;</code>
+     * <code>optional .plus.jdk.websocket.protoc.MessageType type = 5;</code>
      * @return The enum numeric value on the wire for type.
      */
     @java.lang.Override public int getTypeValue() {
       return type_;
     }
     /**
-     * <code>optional .plus.jdk.websocket.protoc.MessageType type = 4;</code>
+     * <code>optional .plus.jdk.websocket.protoc.MessageType type = 5;</code>
      * @param value The enum numeric value on the wire for type to set.
      * @return This builder for chaining.
      */
     public Builder setTypeValue(int value) {
-      bitField0_ |= 0x00000008;
+      bitField0_ |= 0x00000010;
       type_ = value;
       onChanged();
       return this;
     }
     /**
-     * <code>optional .plus.jdk.websocket.protoc.MessageType type = 4;</code>
+     * <code>optional .plus.jdk.websocket.protoc.MessageType type = 5;</code>
      * @return The type.
      */
     @java.lang.Override
@@ -649,7 +785,7 @@ private static final long serialVersionUID = 0L;
       return result == null ? plus.jdk.websocket.protoc.MessageType.UNRECOGNIZED : result;
     }
     /**
-     * <code>optional .plus.jdk.websocket.protoc.MessageType type = 4;</code>
+     * <code>optional .plus.jdk.websocket.protoc.MessageType type = 5;</code>
      * @param value The type to set.
      * @return This builder for chaining.
      */
@@ -657,17 +793,17 @@ private static final long serialVersionUID = 0L;
       if (value == null) {
         throw new NullPointerException();
       }
-      bitField0_ |= 0x00000008;
+      bitField0_ |= 0x00000010;
       type_ = value.getNumber();
       onChanged();
       return this;
     }
     /**
-     * <code>optional .plus.jdk.websocket.protoc.MessageType type = 4;</code>
+     * <code>optional .plus.jdk.websocket.protoc.MessageType type = 5;</code>
      * @return This builder for chaining.
      */
     public Builder clearType() {
-      bitField0_ = (bitField0_ & ~0x00000008);
+      bitField0_ = (bitField0_ & ~0x00000010);
       type_ = 0;
       onChanged();
       return this;
