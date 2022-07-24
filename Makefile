@@ -1,5 +1,5 @@
 
-PROTOC_SRC_DIR=./protoc
+PROTOC_SRC_DIR=./src/main/protoc
 PROTOC_OUT_DIR=./src/main/java
 
 build-protoc:
