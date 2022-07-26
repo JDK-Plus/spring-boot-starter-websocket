@@ -18,7 +18,7 @@
 <dependency>
     <groupId>plus.jdk</groupId>
     <artifactId>spring-boot-starter-websocket</artifactId>
-    <version>1.0.7</version>
+    <version>1.0.8</version>
 </dependency>
 ```
 ## 配置

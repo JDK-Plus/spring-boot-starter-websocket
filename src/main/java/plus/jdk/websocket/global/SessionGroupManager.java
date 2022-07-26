@@ -1,6 +1,8 @@
 package plus.jdk.websocket.global;
 
 import io.netty.channel.Channel;
+import io.netty.channel.ChannelFuture;
+import io.netty.channel.ChannelFutureListener;
 import io.netty.channel.ChannelHandlerContext;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.BeanFactory;
@@ -49,22 +51,22 @@ public class SessionGroupManager {
         return sessionMap.get(userId).get(path);
     }
 
-    public <U> void sendBinary(U userId, String path, byte[] data) {
-        sendMessage(userId, path, data, MessageType.MESSAGE_TYPE_BINARY);
+    public <U> ChannelFuture sendBinary(U userId, String path, byte[] data) {
+        return sendMessage(userId, path, data, MessageType.MESSAGE_TYPE_BINARY);
     }
 
-    public <U> void sendText(U userId, String path, String data) {
-        sendMessage(userId, path, data.getBytes(StandardCharsets.UTF_8), MessageType.MESSAGE_TYPE_TEXT);
+    public <U> ChannelFuture sendText(U userId, String path, String data) {
+        return sendMessage(userId, path, data.getBytes(StandardCharsets.UTF_8), MessageType.MESSAGE_TYPE_TEXT);
     }
 
-    protected  <U> void sendMessage(U userId, String path, byte[] data, MessageType messageType) {
+    protected  <U> ChannelFuture sendMessage(U userId, String path, byte[] data, MessageType messageType) {
         UserChannelConnectSynchronizer synchronizer = beanFactory.getBean(UserChannelConnectSynchronizer.class);
         @SuppressWarnings("unchecked")
         IWSSessionAuthenticatorManager<U, ? extends IWsSession<U>> sessionAuthManager =
                 (IWSSessionAuthenticatorManager<U, ? extends IWsSession<U>>)
                         beanFactory.getBean(properties.getSessionAuthenticator());
         Monitor[] monitors =sessionAuthManager.getUserConnectedMachine(userId, path, properties);
-        synchronizer.sendBroadcast(userId, path,  data, monitors, messageType);
+        return synchronizer.sendBroadcast(userId, path,  data, monitors, messageType);
     }
 
     protected void releaseChannel(ChannelHandlerContext ctx) {

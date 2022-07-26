@@ -6,10 +6,10 @@
 
     <groupId>plus.jdk</groupId>
     <artifactId>spring-boot-starter-websocket</artifactId>
-    <version>1.0.7</version>
+    <version>1.0.8</version>
 
     <name>spring-boot-starter-websocket</name>
-    <description>A simple websocket component base on netty </description>
+    <description>A springboot websocket clustered message push component written by netty.</description>
     <url>https://github.com/JDK-Plus/spring-boot-starter-websocket</url>
 
     <properties>
