@@ -1,9 +1,9 @@
 
-PROTOC_SRC_DIR=./src/main/protoc
+PROTOC_SRC_DIR=./src/main/proto
 PROTOC_OUT_DIR=./src/main/java
 
 build-protoc:
-	protoc -I=${PROTOC_SRC_DIR} --java_out=${PROTOC_OUT_DIR} ${PROTOC_SRC_DIR}/message.proto
+	protoc --plugin=protoc-gen-grpc-java -I=${PROTOC_SRC_DIR} --java_out=${PROTOC_OUT_DIR} ${PROTOC_SRC_DIR}/message.proto
 
 deploy:
 	shift password

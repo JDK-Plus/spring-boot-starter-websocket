@@ -54,14 +54,14 @@ public class UserChannelConnectSynchronizer implements ApplicationRunner {
     /**
      * 向目标机器发送udp报文
      */
-    protected void sendBroadcast(Object userId, String path, byte[] data, Monitor[] monitors, MessageType messageType) {
+    protected ChannelFuture sendBroadcast(Object userId, String path, byte[] data, Monitor[] monitors, MessageType messageType) {
         WsMessage.Builder builder = WsMessage.newBuilder();
         builder.setData(ByteString.copyFrom(data));
         builder.setUid(userId == null ? "" : userId.toString());
         builder.setPath(path);
         builder.setType(messageType);
         WsMessage wsMessage = builder.build();
-        udpMessageBroadcaster.publish(new BroadcastMessage(wsMessage.toByteArray(), Arrays.asList(monitors)));
+        return udpMessageBroadcaster.publish(new BroadcastMessage(wsMessage.toByteArray(), Arrays.asList(monitors)));
     }
 
 
@@ -102,6 +102,7 @@ public class UserChannelConnectSynchronizer implements ApplicationRunner {
             }
             return true;
         }));
-        Runtime.getRuntime().addShutdownHook(thread);
+        thread.start();
+        Runtime.getRuntime().addShutdownHook(new Thread(thread::interrupt));
     }
 }
