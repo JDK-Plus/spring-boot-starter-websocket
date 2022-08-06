@@ -174,7 +174,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 import plus.jdk.broadcast.test.session.MyWsSession;
 import plus.jdk.websocket.annotations.*;
 
-@Component
 @WebsocketHandler(values = {"/ws/message"})
 public class DemoHandler {
 
