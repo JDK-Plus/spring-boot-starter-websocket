@@ -1,8 +1,14 @@
 package plus.jdk.websocket.annotations;
 
+import org.springframework.context.annotation.Bean;
+import org.springframework.stereotype.Service;
+
 import java.lang.annotation.*;
 
+@Bean
+@Service
 @Inherited
+@Documented
 @Target({ElementType.TYPE})
 @Retention(RetentionPolicy.RUNTIME)
 public @interface WebsocketHandler {
