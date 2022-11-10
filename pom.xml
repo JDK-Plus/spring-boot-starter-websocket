@@ -6,7 +6,7 @@
 
     <groupId>plus.jdk</groupId>
     <artifactId>spring-boot-starter-websocket</artifactId>
-    <version>1.1.0</version>
+    <version>1.1.1</version>
 
     <name>spring-boot-starter-websocket</name>
     <description>A springboot websocket clustered message push component written by netty.</description>

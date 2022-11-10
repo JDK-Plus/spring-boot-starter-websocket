@@ -24,50 +24,6 @@ import javax.annotation.Resource;
 @Slf4j
 @Configuration
 @EnableWebSocket
-@ConditionalOnProperty(prefix = "plus.jdk.websocket", name = "enabled", havingValue = "true")
-@EnableConfigurationProperties(WebsocketProperties.class)
-public class WebsocketAutoConfiguration extends WebApplicationObjectSupport implements InitializingBean, BeanFactoryAware, DisposableBean, WebMvcConfigurer {
+public class WebsocketAutoConfiguration {
 
-    @Resource
-    private WebsocketDispatcher websocketDispatcher;
-
-    private BeanFactory beanFactory;
-
-    public WebsocketAutoConfiguration(WebsocketProperties properties) {
-    }
-
-    @Bean
-    public SessionGroupManager SessionGroupManager(WebsocketProperties properties) {
-        return new SessionGroupManager(beanFactory, properties);
-    }
-
-    @Bean
-    public WebsocketDispatcher WebsocketDispatcher(WebsocketProperties properties){
-        return new WebsocketDispatcher(properties, beanFactory);
-    }
-
-    @Bean
-    public ServerEndpointExporter serverEndpointExporter(WebsocketProperties properties) {
-        return new ServerEndpointExporter(websocketDispatcher);
-    }
-
-    @Bean
-    public UserChannelConnectSynchronizer getHeartbeatSynchronizer(WebsocketProperties properties) {
-        return new UserChannelConnectSynchronizer(beanFactory, properties);
-    }
-
-    @Override
-    public void destroy() {
-
-    }
-
-    @Override
-    public void afterPropertiesSet() throws Exception {
-
-    }
-
-    @Override
-    public void setBeanFactory(BeanFactory beanFactory) throws BeansException {
-        this.beanFactory = beanFactory;
-    }
 }
